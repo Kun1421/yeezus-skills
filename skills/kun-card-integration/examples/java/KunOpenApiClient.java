@@ -108,12 +108,26 @@ public final class KunOpenApiClient {
         String code = text(payload, "code");
         if (code != null && !code.isEmpty()
                 && !"0000".equals(code) && !"0".equals(code) && !"SUCCESS".equalsIgnoreCase(code)) {
+            // 策略见 references/产品能力/异常码处理.md：
+            // KLC0005/0013/9600/9999/0009/0010 → retryable，上层只查单/幂等，勿盲重开
+            boolean retryable = isQueryFirstCode(code);
             throw new PlatformException(
                     "platform code=" + code + " message=" + text(payload, "message"),
                     code,
-                    false);
+                    retryable);
         }
         return payload;
+    }
+
+    /** 系统繁忙/超时/未知/重复/待处理：优先查单或幂等，不直接换新单重开。 */
+    private static boolean isQueryFirstCode(String code) {
+        return "KLC0005".equals(code)
+                || "KLC0013".equals(code)
+                || "KLC0018".equals(code)
+                || "KLC9600".equals(code)
+                || "KLC9999".equals(code)
+                || "KLC0009".equals(code)
+                || "KLC0010".equals(code);
     }
 
     private static String valueForSign(JsonNode v) throws Exception {

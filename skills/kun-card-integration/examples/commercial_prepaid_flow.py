@@ -92,11 +92,23 @@ def post(cfg: Config, path: str, body: dict[str, Any]) -> dict[str, Any]:
     # 建议生产启用响应验签（见鉴权文档）；此处略
     code = str(payload.get("code", ""))
     if code and code not in ("0000", "0", "SUCCESS"):
-        # 明确业务/平台拒绝：不可用同 requestNo 盲重试写操作
+        # 异常码策略见 references/产品能力/异常码处理.md
+        # KLC0005/0013/9600/9999 等：retryable=True → 上层走查单，勿直接重开
+        # KLC0009：幂等冲突，上层应查单/用已有结果
+        # 其余参数/业务拒绝：retryable=False → 修参后换新 requestNo
+        retryable = code in (
+            "KLC0005",
+            "KLC0013",
+            "KLC0018",
+            "KLC9600",
+            "KLC9999",
+            "KLC0009",
+            "KLC0010",
+        )
         raise KunApiError(
             f"platform code={code} message={payload.get('message')}",
             code=code,
-            retryable=False,
+            retryable=retryable,
         )
     return payload
 

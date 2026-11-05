@@ -26,7 +26,7 @@
 
 | 技能 ID | 版本 | 说明 |
 |---------|------|------|
-| [`kun-card-integration`](./skills/kun-card-integration/) | 1.3.0 | **统一对接**：新接入 + 旧 VCC 迁移；多语言对齐 yop-demo；见 [CAPABILITY.md](./skills/kun-card-integration/CAPABILITY.md) |
+| [`kun-card-integration`](./skills/kun-card-integration/) | 1.3.1 | **统一对接**：新接入 + 旧 VCC 迁移 + 异常码处理；多语言对齐 yop-demo；见 [CAPABILITY.md](./skills/kun-card-integration/CAPABILITY.md) |
 
 ## 安装
 

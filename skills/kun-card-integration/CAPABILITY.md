@@ -1,8 +1,8 @@
 # kun-card-integration 完整能力清单
 
-技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前整合版 **1.3.0**）。
+技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.1**）。
 
-一套 skill = **新客户对接** + **旧 VCC 迁移** + **多语言可落地代码**。
+一套 skill = **新客户对接** + **旧 VCC 迁移** + **多语言可落地代码** + **异常码处理**。
 
 ---
 
@@ -15,6 +15,7 @@ kun-card-integration
 ├─ C. 旧 VCC → 新 API 迁移（商务卡；无双轨期）
 ├─ D. 鉴权与联调
 ├─ E. 状态 / 异常 / 查单（跨场景强制）
+├─ E2. 异常码处理（HTTP / 平台码 / body.code·KLC*）
 ├─ F. 多语言代码生成（对齐 yop-demo）
 ├─ G. 工具脚本
 └─ H. 面客交付模板（C 接入 / M 迁移）
@@ -83,6 +84,18 @@ kun-card-integration
 | 未知 | 超时/5xx/无法解析 → 只查不重开 |
 | 幂等 | `requestNo`；Webhook `transactionId` |
 | 双通道 | 查询 + 通知，终态不回退 |
+
+---
+
+## 6.1 E2. 异常码处理（强制）
+
+| 能力 | 要点 | 文档 |
+|------|------|------|
+| 三层判码 | HTTP → 平台公共码 → `body.code` | `异常码处理.md` |
+| 业务码 | `0000` 成功；`KLC0001`–`KLC0021`、`KLC9600/9601/9999` 等 | 同上 |
+| 动作表 | `FIX_CONFIG` / `FIX_PARAM_NEW_NO` / `IDEMPOTENT_USE_RESULT` / `QUERY_ONLY` / `RETRY_LATER` | 同上 |
+| 平台码 | `40047` 鉴权、`40044` 业务失败、`40029` 限流等 | 开放平台公共错误码页 |
+| 枚举拉取 | `POST /rest/v2.0/caas/response-code-list` | OpenAPI / opendocs |
 
 ---
 

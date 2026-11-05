@@ -2,6 +2,10 @@
 
 最新条目置顶；技能版本以各自 `SKILL.md` frontmatter 为准。
 
+## kun-card-integration 1.3.1 - 2026-11-05
+
+新增 [`异常码处理.md`](./skills/kun-card-integration/references/产品能力/异常码处理.md)：HTTP / 平台公共码 / `body.code`（KLC*）分层、处理动作表与决策树；SKILL/CAPABILITY/排障交叉引用。
+
 ## kun-card-integration 1.3.0 - 2026-11-05
 
 **整合统一对接 skill**：新接入 + 旧 VCC 迁移合入同一 `kun-card-integration`（不另开迁移 skill）。新增 `CAPABILITY.md` 完整能力清单、`references/迁移/`（总览/对照表/鉴权/mapping.yaml）、`scripts/lookup_mapping.py`。约定无双轨期；`user-cards`/`card-remark` 标 `pending_add`。

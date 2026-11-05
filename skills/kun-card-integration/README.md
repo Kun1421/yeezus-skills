@@ -1,6 +1,6 @@
 # KUN 卡开放 API 统一对接技能
 
-[![版本](https://img.shields.io/badge/version-1.3.0-blue)](./SKILL.md)
+[![版本](https://img.shields.io/badge/version-1.3.1-blue)](./SKILL.md)
 
 > **一套 skill**：新客户接入（商务卡 / 消费卡 / Webhook）+ 旧 VCC（YOP / open.kun）迁移到 opendocs。  
 > 技能 ID：`kun-card-integration`  

@@ -2,10 +2,10 @@
 name: kun-card-integration
 description: >-
   KUN 卡开放 API 统一对接技能：新客户接入（商务卡/消费卡/Webhook）+ 旧 VCC（yeevcc/YOP/open.kun.global）
-  迁移到 opendocs。覆盖选型、沙箱跑通、可落地代码（签名、判态、查单、异常、授权 A/D）、新旧接口对照与鉴权切换。
+  迁移到 opendocs。  覆盖选型、沙箱跑通、可落地代码（签名、判态、查单、异常码处理、授权 A/D）、新旧接口对照与鉴权切换。
   语言对齐 yop-demo：Python/Java/Node/TS/Go/PHP/.NET。当用户提到对接卡、开卡、KYC、充值、共享账户、
-  webhook、旧VCC迁移、yop-demo、opendocs.kun.global、沙箱联调时使用。
-version: 1.3.0
+  webhook、错误码、KLC、旧VCC迁移、yop-demo、opendocs.kun.global、沙箱联调时使用。
+version: 1.3.1
 ---
 
 # KUN 卡开放 API 统一对接技能
@@ -27,6 +27,7 @@ version: 1.3.0
 | 旧 VCC → 新 API 迁移 | `迁移/迁移总览.md` → `接口对照表.md` / `mapping.yaml` |
 | 查旧 path 对应新接口 | `scripts/lookup_mapping.py` |
 | 判态 / 查单 / 异常 | `产品能力/状态判断与异常处理.md`（**写代码必读**） |
+| **异常码 / KLC / 平台码** | `产品能力/异常码处理.md`（**写代码必读**） |
 | 多语言 | `产品能力/多语言对齐.md` |
 
 完整能力清单见 [`CAPABILITY.md`](./CAPABILITY.md)。
@@ -43,7 +44,8 @@ version: 1.3.0
 | 2 | 有序流程含查单与通知 |
 | 3 | 沙箱 JSON + `kun_client` 或所选语言可执行示例 |
 | 4 | 可落地：requestNo、code、SUCCESS/FAIL/PENDING、超时只查 |
-| 5–6 | 状态与异常专业；缺则只能标「沙箱演示」 |
+| 5 | 状态专业：不凭 HTTP 200 定终态 |
+| 6 | 异常码专业：按 `异常码处理.md` 分支（鉴权不重试写；`KLC9600`/5xx 只查；`KLC0009` 幂等） |
 
 ### B. 迁移（模板 M）
 
@@ -81,6 +83,7 @@ version: 1.3.0
 | 鉴权从 YOP 切换 | `迁移/鉴权迁移.md` |
 | 多语言 | `产品能力/多语言对齐.md` |
 | 状态/异常/查单 | `产品能力/状态判断与异常处理.md` |
+| **异常码处理** | `产品能力/异常码处理.md` |
 | 状态枚举 / 字段 | `状态与枚举.md` · `字段要求.md` |
 | 商务卡 / 消费卡 / Webhook | 各自对接 md |
 | 样例 | `examples/` |
@@ -93,31 +96,36 @@ version: 1.3.0
 
 ### 从零接入
 
-1. 锁定场景 + 易错点 → 2. 状态/字段必读 → 3. 鉴权文档 → 4. OpenAPI  
-5. 最小跑通 JSON → 6. 按语言生成代码（同构判态）→ 7. 模板 C
+1. 锁定场景 + 易错点 → 2. **状态 + 异常码** + 字段必读 → 3. 鉴权文档 → 4. OpenAPI  
+5. 最小跑通 JSON → 6. 按语言生成代码（同构判态与异常码分支）→ 7. 模板 C
 
 ### 旧 VCC 迁移
 
 1. `迁移总览`（无双轨）→ 2. `鉴权迁移`（yop-demo → 新 RSA）  
 3. `lookup_mapping` / 对照表替换 path → 4. 资金查单与 Webhook  
 5. 按语言改客户端 → 6. 沙箱冒烟 → 7. 切换清单 → 模板 M  
-8. 判态细节挂接 `状态判断与异常处理.md`
+8. 判态与异常码挂接 `状态判断与异常处理.md` + `异常码处理.md`
 
-### 写代码判态（摘要）
+### 写代码判态与异常码（摘要）
 
 ```text
-写接口 → 传输/5xx/无法解析=UNKNOWN 只查单
-       → code 非成功=明确失败，新 requestNo
-       → SUCCESS / FAIL / PENDING（PENDING 禁止再开）
+写接口
+  ├─ 传输/5xx/无法解析/KLC9600 → UNKNOWN → 原 requestNo 只查单
+  ├─ 鉴权/平台 40047 → FIX_CONFIG，不重试写
+  ├─ body.code 非成功 → 按异常码处理.md
+  │     ├─ KLC0009 → 幂等用原结果
+  │     ├─ KLC0002/0003/0004/0008 → 修参 + 新 requestNo
+  │     └─ KLC0005/0013/9999 → 先查单
+  └─ code 成功 → 业务 SUCCESS / FAIL / PENDING（PENDING 禁止再开）
 ```
 
 ---
 
 ## 输出模板
 
-**C（接入）**：场景 → 流程 → 易错点 → 状态 → 异常 → JSON → 代码 → 沙箱 → 上生产 → 风险  
+**C（接入）**：场景 → 流程 → 易错点 → 状态 → 异常 → **异常码** → JSON → 代码 → 沙箱 → 上生产 → 风险  
 
-**M（迁移）**：范围 → 鉴权 → 对照 → 行为差异 → 改造步骤 → 查单/Webhook → 沙箱 → **切换清单（无双轨）** → 风险  
+**M（迁移）**：范围 → 鉴权 → 对照 → 行为差异 → 改造步骤 → 查单/Webhook → 异常码 → 沙箱 → **切换清单（无双轨）** → 风险  
 
 ---
 
@@ -135,6 +143,6 @@ version: 1.3.0
 
 - [CAPABILITY.md](./CAPABILITY.md) · [多语言对齐](references/产品能力/多语言对齐.md)  
 - [最小跑通](references/产品能力/最小跑通.md) · [迁移总览](references/迁移/迁移总览.md)  
-- [状态判断与异常处理](references/产品能力/状态判断与异常处理.md)  
+- [状态判断与异常处理](references/产品能力/状态判断与异常处理.md) · [异常码处理](references/产品能力/异常码处理.md)  
 - [examples](examples/) · [scripts](scripts/)  
 - [opendocs](https://opendocs.kun.global/)
