@@ -1,0 +1,578 @@
+# KUN 卡中心 API 索引
+# 字段权威来源：references/openapi/卡中心.openapi.json（本地 OpenAPI）
+# 人类可读页：https://open.kun.global/docs/apis/caas/...（SPA，curl 取不到字段）
+# 平台接入文档：https://opendocs.kun.global/
+version: "1.0.0"
+
+url_templates:
+  human_page: "https://open.kun.global/docs/apis/caas/{slug}"
+  opendocs: "https://opendocs.kun.global/"
+  openapi_local: "references/openapi/卡中心.openapi.json"
+
+gateway:
+  sandbox: "https://sandbox.kun.global"
+  production: "https://openapi.kun.global"
+
+# domain：commercial-* 商务卡(/api)；consumer-* 消费卡(/caas)；webhook 出站通知
+
+commercial-product:
+  - id: rest-v2_0-api-common-cardBins
+    name: 卡产品列表
+    method: POST
+    path: /rest/v2.0/api/common/cardBins
+    request_schema: CommonCardBinQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__cardBins
+
+commercial-cardholder:
+  - id: rest-v2_0-caas-customer-commercial-add-cardholder
+    name: 商务卡-添加持卡人
+    method: POST
+    path: /rest/v2.0/caas/customer/commercial/add-cardholder
+    request_schema: CommercialAddCardholderReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__commercial__add-cardholder
+  - id: rest-v2_0-caas-customer-commercial-cardholders
+    name: 商务卡-持卡人列表
+    method: POST
+    path: /rest/v2.0/caas/customer/commercial/cardholders
+    request_schema: CommercialCardholderQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__commercial__cardholders
+  - id: rest-v2_0-caas-customer-commercial-modify-cardholder
+    name: 商务卡-修改持卡人
+    method: POST
+    path: /rest/v2.0/caas/customer/commercial/modify-cardholder
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__commercial__modify-cardholder
+
+commercial-card:
+  - id: rest-v2_0-api-accountManagement-queryBalanceByCardId
+    name: 卡余额查询
+    method: POST
+    path: /rest/v2.0/api/accountManagement/queryBalanceByCardId
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__accountManagement__queryBalanceByCardId
+  - id: rest-v2_0-api-cardManagement-cancelCard
+    name: 单张销卡
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cancelCard
+    request_schema: CancelCardReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cancelCard
+  - id: rest-v2_0-api-cardManagement-cardActivation
+    name: 卡激活
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cardActivation
+    request_schema: CardActivationReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cardActivation
+  - id: rest-v2_0-api-cardManagement-cardBasicInfoQuery
+    name: 卡片基本信息查询
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cardBasicInfoQuery
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cardBasicInfoQuery
+  - id: rest-v2_0-api-cardManagement-cardFreezeAndUnFreezes
+    name: 卡冻结/解冻
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cardFreezeAndUnFreezes
+    request_schema: CardFreezeAndUnfreezeReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cardFreezeAndUnFreezes
+  - id: rest-v2_0-api-cardManagement-cardInfoQuery
+    name: 卡信息查询（含 CVV 和有效期）
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cardInfoQuery
+    request_schema: CardInfoQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cardInfoQuery
+  - id: rest-v2_0-api-cardManagement-cardMccSetting
+    name: 卡片 MCC 配置
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cardMccSetting
+    request_schema: CardMccSettingReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cardMccSetting
+  - id: rest-v2_0-api-common-batchCancelCard
+    name: 批量销卡
+    method: POST
+    path: /rest/v2.0/api/common/batchCancelCard
+    request_schema: CommonBatchCancelCardReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__batchCancelCard
+  - id: rest-v2_0-api-common-batchCancelCardTask
+    name: 批量销卡任务查询
+    method: POST
+    path: /rest/v2.0/api/common/batchCancelCardTask
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__batchCancelCardTask
+  - id: rest-v2_0-api-common-batchOpenCard
+    name: 批量开卡
+    method: POST
+    path: /rest/v2.0/api/common/batchOpenCard
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__batchOpenCard
+  - id: rest-v2_0-api-common-batchOpenCardTask
+    name: 批量开卡任务查询
+    method: POST
+    path: /rest/v2.0/api/common/batchOpenCardTask
+    request_schema: CommonBatchOpenCardTaskReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__batchOpenCardTask
+  - id: rest-v2_0-api-common-cardLimitSettingV2
+    name: 卡片限额设置v2
+    method: POST
+    path: /rest/v2.0/api/common/cardLimitSettingV2
+    request_schema: CardLimitSettingReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__cardLimitSettingV2
+  - id: rest-v2_0-api-common-openCard
+    name: 开卡V2
+    method: POST
+    path: /rest/v2.0/api/common/openCard
+    request_schema: CommonOpenCardReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__openCard
+  - id: rest-v2_0-api-common-openCardQuery
+    name: 开卡V2状态查询
+    method: POST
+    path: /rest/v2.0/api/common/openCardQuery
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__openCardQuery
+
+commercial-fund:
+  - id: rest-v2_0-api-cardManagement-cardRecharge
+    name: 预付卡充值
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cardRecharge
+    request_schema: CardRechargeReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cardRecharge
+  - id: rest-v2_0-api-cardManagement-cardRechargeStatusQuery
+    name: 卡充值状态查询
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cardRechargeStatusQuery
+    request_schema: CardRechargeStatusQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cardRechargeStatusQuery
+  - id: rest-v2_0-api-cardManagement-cardTransferOut
+    name: 卡转出
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cardTransferOut
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cardTransferOut
+  - id: rest-v2_0-api-cardManagement-cardTransferOutStatusQuery
+    name: 卡转出状态查询
+    method: POST
+    path: /rest/v2.0/api/cardManagement/cardTransferOutStatusQuery
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__cardTransferOutStatusQuery
+  - id: rest-v2_0-api-cardManagement-pageQueryCardRechargeDetail
+    name: 分页查询卡充值记录
+    method: POST
+    path: /rest/v2.0/api/cardManagement/pageQueryCardRechargeDetail
+    request_schema: PageQueryCardRechargeDetailReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__cardManagement__pageQueryCardRechargeDetail
+
+commercial-shared-account:
+  - id: rest-v2_0-api-common-account-queryTransDetail
+    name: 账户动账明细
+    method: POST
+    path: /rest/v2.0/api/common/account/queryTransDetail
+    request_schema: CommonAccountTransDetailQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__account__queryTransDetail
+  - id: rest-v2_0-api-common-accountCardInfo
+    name: 账户下卡列表
+    method: POST
+    path: /rest/v2.0/api/common/accountCardInfo
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__accountCardInfo
+  - id: rest-v2_0-api-common-accountTransferIn
+    name: 共享账户充值
+    method: POST
+    path: /rest/v2.0/api/common/accountTransferIn
+    request_schema: CommonAccountTransferInReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__accountTransferIn
+  - id: rest-v2_0-api-common-accountTransferInQuery
+    name: 账户充值状态查询
+    method: POST
+    path: /rest/v2.0/api/common/accountTransferInQuery
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__accountTransferInQuery
+  - id: rest-v2_0-api-common-accountTransferOut
+    name: 共享账户转出
+    method: POST
+    path: /rest/v2.0/api/common/accountTransferOut
+    request_schema: CommonAccountTransferOutReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__accountTransferOut
+  - id: rest-v2_0-api-common-accountTransferOutQuery
+    name: 账户转出状态查询
+    method: POST
+    path: /rest/v2.0/api/common/accountTransferOutQuery
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__accountTransferOutQuery
+  - id: rest-v2_0-api-common-customerAccountInfo
+    name: 共享账户列表
+    method: POST
+    path: /rest/v2.0/api/common/customerAccountInfo
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__customerAccountInfo
+  - id: rest-v2_0-api-common-userAccount-create
+    name: 创建共享账户
+    method: POST
+    path: /rest/v2.0/api/common/userAccount/create
+    request_schema: CommonAccountCreateReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__userAccount__create
+  - id: rest-v2_0-api-common-userAccount-modify
+    name: 修改共享账户
+    method: POST
+    path: /rest/v2.0/api/common/userAccount/modify
+    request_schema: CommonAccountModifyReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__userAccount__modify
+
+commercial-org-account:
+  - id: rest-v2_0-caas-account-page-query-organization-fee-detail
+    name: 分页机构手续费明细
+    method: POST
+    path: /rest/v2.0/caas/account/page-query-organization-fee-detail
+    request_schema: PageQueryOrganizationFeeDetailReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__account__page-query-organization-fee-detail
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__account__page-query-organization-fee-detail
+  - id: rest-v2_0-caas-account-query-organization-balance
+    name: 查询机构余额
+    method: POST
+    path: /rest/v2.0/caas/account/query-organization-balance
+    request_schema: QueryOrganizationBalanceReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__account__query-organization-balance
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__account__query-organization-balance
+
+consumer-kyc:
+  - id: rest-v2_0-caas-customer-inital-kyc-url
+    name: KYC SDK 授权 URL
+    method: POST
+    path: /rest/v2.0/caas/customer/inital-kyc-url
+    request_schema: KycAuthReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__inital-kyc-url
+  - id: rest-v2_0-caas-customer-kyc-result-inquiry
+    name: KYC 案件结果查询
+    method: POST
+    path: /rest/v2.0/caas/customer/kyc-result-inquiry
+    request_schema: KycResultInquiryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__kyc-result-inquiry
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__customer__kyc-result-inquiry
+  - id: rest-v2_0-caas-customer-kyc-submit
+    name: 持卡人 KYC 报送
+    method: POST
+    path: /rest/v2.0/caas/customer/kyc-submit
+    request_schema: CustomerKycSubmissionReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__kyc-submit
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__customer__kyc-submit
+  - id: rest-v2_0-caas-customer-kyc-update
+    name: 持卡人 KYC 修改
+    method: POST
+    path: /rest/v2.0/caas/customer/kyc-update
+    request_schema: CustomerKycUpdateReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__kyc-update
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__customer__kyc-update
+
+consumer-cardholder:
+  - id: rest-v2_0-caas-customer-update-email-phone
+    name: 修改邮箱或手机号
+    method: POST
+    path: /rest/v2.0/caas/customer/update-email-phone
+    request_schema: ModifyEmailOrPhoneReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__update-email-phone
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__customer__update-email-phone
+  - id: rest-v2_0-caas-customer-update-mailing-address
+    name: 修改邮寄地址
+    method: POST
+    path: /rest/v2.0/caas/customer/update-mailing-address
+    request_schema: ModifyMailingAddressInfoReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__update-mailing-address
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__customer__update-mailing-address
+
+consumer-card:
+  - id: rest-v2_0-caas-card-activation
+    name: 卡片激活
+    method: POST
+    path: /rest/v2.0/caas/card/activation
+    request_schema: CardActivationReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__activation
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__activation
+  - id: rest-v2_0-caas-card-apply-card
+    name: 申请开卡
+    method: POST
+    path: /rest/v2.0/caas/card/apply-card
+    request_schema: ApplyCardReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__apply-card
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__apply-card
+  - id: rest-v2_0-caas-card-apply-physical-card
+    name: 实体卡申请
+    method: POST
+    path: /rest/v2.0/caas/card/apply-physical-card
+    request_schema: PhysicalCardApplyReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__apply-physical-card
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__apply-physical-card
+  - id: rest-v2_0-caas-card-cancellation
+    name: 销卡
+    method: POST
+    path: /rest/v2.0/caas/card/cancellation
+    request_schema: CancelCardReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__cancellation
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__cancellation
+  - id: rest-v2_0-caas-card-card-basic-info
+    name: 卡片基本信息
+    method: POST
+    path: /rest/v2.0/caas/card/card-basic-info
+    request_schema: CardInfoQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__card-basic-info
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__card-basic-info
+  - id: rest-v2_0-caas-card-damaged-card-replacement
+    name: 实体卡损毁补卡
+    method: POST
+    path: /rest/v2.0/caas/card/damaged-card-replacement
+    request_schema: CardPhysicalCardDamageReplacementReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__damaged-card-replacement
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__damaged-card-replacement
+  - id: rest-v2_0-caas-card-freeze-and-unfreeze-card
+    name: 卡片冻结/解冻
+    method: POST
+    path: /rest/v2.0/caas/card/freeze-and-unfreeze-card
+    request_schema: CardFreezeAndUnfreezeReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__freeze-and-unfreeze-card
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__freeze-and-unfreeze-card
+  - id: rest-v2_0-caas-card-get-pin-setup-url
+    name: 生成 PIN 设置 URL
+    method: POST
+    path: /rest/v2.0/caas/card/get-pin-setup-url
+    request_schema: PinSetupUrlReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__get-pin-setup-url
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__get-pin-setup-url
+  - id: rest-v2_0-caas-card-limit-config
+    name: 卡片限额配置
+    method: POST
+    path: /rest/v2.0/caas/card/limit-config
+    request_schema: CardLimitSettingReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__limit-config
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__limit-config
+  - id: rest-v2_0-caas-card-lost-report
+    name: 卡片挂失
+    method: POST
+    path: /rest/v2.0/caas/card/lost-report
+    request_schema: CardLossReportReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__lost-report
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__lost-report
+  - id: rest-v2_0-caas-card-mcc-setting
+    name: 卡片 MCC 配置
+    method: POST
+    path: /rest/v2.0/caas/card/mcc-setting
+    request_schema: CardMccSettingReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__mcc-setting
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__mcc-setting
+  - id: rest-v2_0-caas-card-presale-card-activation
+    name: 预售卡激活
+    method: POST
+    path: /rest/v2.0/caas/card/presale-card-activation
+    request_schema: PresaleCardActivationReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__presale-card-activation
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__presale-card-activation
+  - id: rest-v2_0-caas-card-presale-card-apply
+    name: 预售卡申请
+    method: POST
+    path: /rest/v2.0/caas/card/presale-card-apply
+    request_schema: PresaleCardApplyReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__presale-card-apply
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__presale-card-apply
+  - id: rest-v2_0-caas-card-query-apply-card-status
+    name: 开卡状态查询
+    method: POST
+    path: /rest/v2.0/caas/card/query-apply-card-status
+    request_schema: ApplyCardStatusQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__query-apply-card-status
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__query-apply-card-status
+  - id: rest-v2_0-caas-card-query-card-info
+    name: 卡信息查询
+    method: POST
+    path: /rest/v2.0/caas/card/query-card-info
+    request_schema: CardInfoQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__query-card-info
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__query-card-info
+  - id: rest-v2_0-caas-card-query-presale-apply-result
+    name: 预售卡申请结果查询
+    method: POST
+    path: /rest/v2.0/caas/card/query-presale-apply-result
+    request_schema: PresaleCardApplyResultQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__query-presale-apply-result
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__query-presale-apply-result
+  - id: rest-v2_0-caas-card-query-recharge-detail-by-page
+    name: 分页查询卡充值明细
+    method: POST
+    path: /rest/v2.0/caas/card/query-recharge-detail-by-page
+    request_schema: PageQueryCardRechargeDetailReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__query-recharge-detail-by-page
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__query-recharge-detail-by-page
+  - id: rest-v2_0-caas-card-recharge
+    name: 卡充值
+    method: POST
+    path: /rest/v2.0/caas/card/recharge
+    request_schema: CardRechargeReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__recharge
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__recharge
+  - id: rest-v2_0-caas-card-recharge-status-query
+    name: 卡充值状态查询
+    method: POST
+    path: /rest/v2.0/caas/card/recharge-status-query
+    request_schema: CardRechargeStatusQueryReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__recharge-status-query
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__recharge-status-query
+  - id: rest-v2_0-caas-card-remove-block-code
+    name: 移除卡片封锁码
+    method: POST
+    path: /rest/v2.0/caas/card/remove-block-code
+    request_schema: RemoveCardBlockCodeReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__remove-block-code
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__remove-block-code
+  - id: rest-v2_0-caas-card-send-activate-verify-code
+    name: 实体卡激活-发送验证码
+    method: POST
+    path: /rest/v2.0/caas/card/send-activate-verify-code
+    request_schema: PhysicalCardActiveReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__send-activate-verify-code
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__send-activate-verify-code
+  - id: rest-v2_0-caas-card-verify-physical-card-active
+    name: 实体卡激活校验
+    method: POST
+    path: /rest/v2.0/caas/card/verify-physical-card-active
+    request_schema: PhysicalCardActiveVerifyReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__verify-physical-card-active
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__verify-physical-card-active
+  - id: rest-v2_0-caas-customer-query-card-balance
+    name: 按卡查询余额
+    method: POST
+    path: /rest/v2.0/caas/customer/query-card-balance
+    request_schema: QueryBalanceByCardIdReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__query-card-balance
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__customer__query-card-balance
+
+consumer-txn:
+  - id: rest-v2_0-caas-card-query-transaction
+    name: 分页查询交易
+    method: POST
+    path: /rest/v2.0/caas/card/query-transaction
+    request_schema: QueryTransactionReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__card__query-transaction
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__card__query-transaction
+
+consumer-file:
+  - id: rest-v2_0-caas-file-base64upload
+    name: 文件上传（Base64）
+    method: POST
+    path: /rest/v2.0/caas/file/base64upload
+    request_schema: UploadBase64FileReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__file__base64upload
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__file__base64upload
+  - id: rest-v2_0-caas-file-recon-file-download
+    name: 对账文件下载
+    method: POST
+    path: /rest/v2.0/caas/file/recon-file-download
+    request_schema: OrganizationFileDownloadReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__file__recon-file-download
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__file__recon-file-download
+
+consumer-config:
+  - id: rest-v2_0-caas-address-default-packaging-address
+    name: 默认包装地址查询
+    method: POST
+    path: /rest/v2.0/caas/address/default-packaging-address
+    request_schema: OpenApiBaseRequestVO
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__address__default-packaging-address
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__address__default-packaging-address
+  - id: rest-v2_0-caas-address-packaging-address-add
+    name: 新增包装地址
+    method: POST
+    path: /rest/v2.0/caas/address/packaging-address-add
+    request_schema: PhysicalCardPackingAddressCreateReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__address__packaging-address-add
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__address__packaging-address-add
+  - id: rest-v2_0-caas-address-packaging-address-update
+    name: 更新包装地址
+    method: POST
+    path: /rest/v2.0/caas/address/packaging-address-update
+    request_schema: PhysicalCardPackingAddressUpdateReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__address__packaging-address-update
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__address__packaging-address-update
+  - id: rest-v2_0-caas-config-webhook-sign-key-config
+    name: Webhook 签名密钥配置
+    method: POST
+    path: /rest/v2.0/caas/config/webhook-sign-key-config
+    request_schema: WebhookSignKeyConfigReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__config__webhook-sign-key-config
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__config__webhook-sign-key-config
+  - id: rest-v2_0-caas-response-code-list
+    name: 响应码枚举
+    method: POST
+    path: /rest/v2.0/caas/response-code-list
+    request_schema: ResponseCode
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__response-code-list
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__response-code-list
+
+webhook:
+  - id: rest-v2_0-caas-customer-kyc-completion-notify
+    name: KYC 提交完成通知
+    method: POST
+    path: /rest/v2.0/caas/customer/kyc-completion-notify
+    request_schema: SDKKycSubmitNotifyReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__kyc-completion-notify
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__customer__kyc-completion-notify
+  - id: rest-v2_0-caas-customer-kyc-notify
+    name: KYC 结果通知
+    method: POST
+    path: /rest/v2.0/caas/customer/kyc-notify
+    request_schema: KycNotifyReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__customer__kyc-notify
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__customer__kyc-notify
+  - id: rest-v2_0-caas-transaction-result-nofity
+    name: 交易结果通知
+    method: POST
+    path: /rest/v2.0/caas/transaction/result-nofity
+    request_schema: TransactionNotifyReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__transaction__result-nofity
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__transaction__result-nofity
+  - id: rest-v2_0-caas-webhook-add-block-code-notify
+    name: 卡片封锁码新增通知
+    method: POST
+    path: /rest/v2.0/caas/webhook/add-block-code-notify
+    request_schema: AddCardBlockCodeWebHookRequestVO
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__webhook__add-block-code-notify
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__webhook__add-block-code-notify
+  - id: rest-v2_0-caas-webhook-auth-release
+    name: 授权释放通知
+    method: POST
+    path: /rest/v2.0/caas/webhook/auth-release
+    request_schema: ReleaseResultWebHookReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__webhook__auth-release
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__webhook__auth-release
+  - id: rest-v2_0-caas-webhook-card-status-update
+    name: 卡片状态变更通知
+    method: POST
+    path: /rest/v2.0/caas/webhook/card-status-update
+    request_schema: CardStatusUpdateWebHookReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__webhook__card-status-update
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__webhook__card-status-update
+  - id: rest-v2_0-caas-webhook-card-token-notify
+    name: 卡片 Token 通知
+    method: POST
+    path: /rest/v2.0/caas/webhook/card-token-notify
+    request_schema: CardTokenWebHookRequestVO
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__webhook__card-token-notify
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__webhook__card-token-notify
+  - id: rest-v2_0-caas-webhook-clearing
+    name: 清算通知
+    method: POST
+    path: /rest/v2.0/caas/webhook/clearing
+    request_schema: ClearingResultWebHookReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__webhook__clearing
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__webhook__clearing
+  - id: rest-v2_0-caas-webhook-otp-3ds
+    name: 3DS OTP 通知
+    method: POST
+    path: /rest/v2.0/caas/webhook/otp-3ds
+    request_schema: WebhookFor3DSOTP
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__webhook__otp-3ds
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__webhook__otp-3ds
+  - id: rest-v2_0-caas-webhook-pin-setup
+    name: PIN 设置结果通知
+    method: POST
+    path: /rest/v2.0/caas/webhook/pin-setup
+    request_schema: PinSetupWebHookReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__webhook__pin-setup
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__webhook__pin-setup
+  - id: rest-v2_0-caas-webhook-presale-card-apply-result
+    name: 预售卡申请结果通知
+    method: POST
+    path: /rest/v2.0/caas/webhook/presale-card-apply-result
+    request_schema: PresaleCardApplyResultWebHookReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__webhook__presale-card-apply-result
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__webhook__presale-card-apply-result
+  - id: rest-v2_0-caas-webhook-transaction
+    name: 交易授权 Webhook
+    method: POST
+    path: /rest/v2.0/caas/webhook/transaction
+    request_schema: TransactionWebhookReq
+    human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__caas__webhook__transaction
+    legacy_doc: https://open.kun.global/docs/apis/caas/post__rest__v1.0__caas__webhook__transaction
