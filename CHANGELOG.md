@@ -2,6 +2,10 @@
 
 最新条目置顶；技能版本以各自 `SKILL.md` frontmatter 为准。
 
+## kun-card-integration 1.3.2 - 2026-11-05
+
+补齐旧 VCC `user-cards` / `card-remark` 对照：`POST /rest/v2.0/api/common/userCards`、`POST /rest/v2.0/api/common/updateCardRemark`；纳入 mapping、字段要求、商务卡对接、api-index 与本地 OpenAPI 片段。
+
 ## kun-card-integration 1.3.1 - 2026-11-05
 
 新增 [`异常码处理.md`](./skills/kun-card-integration/references/产品能力/异常码处理.md)：HTTP / 平台公共码 / `body.code`（KLC*）分层、处理动作表与决策树；SKILL/CAPABILITY/排障交叉引用。

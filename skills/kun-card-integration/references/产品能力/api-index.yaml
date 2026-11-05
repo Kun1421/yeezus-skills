@@ -122,6 +122,20 @@ commercial-card:
     method: POST
     path: /rest/v2.0/api/common/openCardQuery
     human_page: https://open.kun.global/docs/apis/caas/post__rest__v2.0__api__common__openCardQuery
+  - id: rest-v2_0-api-common-userCards
+    name: 机构下分页查询卡片
+    method: POST
+    path: /rest/v2.0/api/common/userCards
+    request_schema: CommonUserCardsReq
+    openapi_local: references/openapi/userCards.openapi.json
+    legacy_vcc: /rest/v1.0/vcc/user-cards
+  - id: rest-v2_0-api-common-updateCardRemark
+    name: 修改卡片备注
+    method: POST
+    path: /rest/v2.0/api/common/updateCardRemark
+    request_schema: CommonUpdateCardRemarkReq
+    openapi_local: references/openapi/updateCardRemark.openapi.json
+    legacy_vcc: /rest/v1.0/vcc/card-remark
 
 commercial-fund:
   - id: rest-v2_0-api-cardManagement-cardRecharge

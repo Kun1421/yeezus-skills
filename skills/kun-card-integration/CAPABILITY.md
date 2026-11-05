@@ -1,6 +1,6 @@
 # kun-card-integration 完整能力清单
 
-技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.1**）。
+技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.2**）。
 
 一套 skill = **新客户对接** + **旧 VCC 迁移** + **多语言可落地代码** + **异常码处理**。
 
@@ -43,6 +43,8 @@ kun-card-integration
 | 卡资金 | 充值/转出 + 状态查询 |
 | 批量开卡/销卡 | 任务查询至终态 |
 | 卡信息/余额/限额/激活 | 运维查询与配置 |
+| 机构分页查卡 | `POST .../common/userCards`（旧 user-cards） |
+| 修改卡备注 | `POST .../common/updateCardRemark`（旧 card-remark → 字段 `cardRemark`） |
 | Webhook 接收 | 验签、`authResult=A\|D`、幂等 |
 | 沙箱命令 | `kun_client.py call` |
 | 可落多样例 | Python / Java 仓库样例；其他语言同构生成 |
@@ -58,7 +60,7 @@ kun-card-integration
 | 接口对照 | `迁移/mapping.yaml` + `接口对照表.md` |
 | 查询拆分 | 旧 `card-recharge-query` → 充值查单 / 转出查单 |
 | 新增查单 | 账户充值/转出状态查询（旧无） |
-| 待补接口 | `user-cards`、`card-remark` → `pending_add`（新侧将补） |
+| 查卡 / 改备注 | `user-cards`→`userCards`；`card-remark`→`updateCardRemark`（已 mapped） |
 | 切换策略 | **无双轨期**：沙箱改完 → 生产切新 |
 | 对照 CLI | `scripts/lookup_mapping.py` |
 
@@ -133,7 +135,6 @@ kun-card-integration
 | 项 | 说明 |
 |----|------|
 | 消费卡旧 caas 迁移 | 另册，不在当前 mapping |
-| 伪造 `pending_add` 的新 path | `user-cards` / `card-remark` 上线前禁止编造 |
 | 内部服务实现细节 | 面客禁止 |
 | 长期旧新双轨运营 | **不支持**；无双轨期 |
 

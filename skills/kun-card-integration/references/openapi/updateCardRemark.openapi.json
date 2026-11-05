@@ -1,0 +1,224 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "KL CaaS - 修改卡片备注",
+    "description": "对齐 YeeVCC card-remark。\n\n- 开放平台：POST /rest/v2.0/api/common/updateCardRemark，请求头 API version=2；kun-api 将 apiCustomerId 映射为 organizationNo。\n- 对内：POST /api/common/updateCardRemark（兼 /api/cardManagement/updateCardRemark）。\n- 字段名为 cardRemark（非 VCC 的 remark）；覆盖写；空串或仅空白经 trim 后落库为 null（清空）。\n- cardId 必填；customerId 可选，传入时与卡归属一并校验。",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://{host}",
+      "description": "开放平台 kun-api（outer）",
+      "variables": { "host": { "default": "openapi.example.com" } }
+    },
+    {
+      "url": "https://{host}/linkage-customer",
+      "description": "kun-linkage-customer（对内）",
+      "variables": { "host": { "default": "qa-caas.yeewallex.hk" } }
+    }
+  ],
+  "tags": [
+    {
+      "name": "通用卡产品",
+      "description": "CommonCardFacade → CommonCardService → CardManagementBizService#updateCardRemark"
+    }
+  ],
+  "paths": {
+    "/rest/v2.0/api/common/updateCardRemark": {
+      "post": {
+        "tags": ["通用卡产品"],
+        "summary": "修改卡片备注",
+        "description": "按 organizationNo+cardId（可选 customerId）定位卡后覆盖写 card_remark。开放平台 version=2。",
+        "operationId": "openApiUpdateCardRemark",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "required": true,
+            "description": "API 版本，固定传 2（与 tbl_gw_service.version 匹配；以实际网关头名为准）",
+            "schema": { "type": "string", "enum": ["2"], "default": "2" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CommonUpdateCardRemarkReq" },
+              "example": {
+                "requestNo": "REQ202611050002",
+                "organizationNo": "ORG001",
+                "secretKey": "your-secret-key",
+                "cardId": "K-1c5347989ae04802ae123dcea5330574",
+                "customerId": "C10001",
+                "cardRemark": "marketing campaign"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "HTTP 恒 200；业务成败看 code（0000 成功）",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OpenApiResultUpdateCardRemark" },
+                "examples": {
+                  "success": {
+                    "summary": "成功",
+                    "value": {
+                      "requestNo": "REQ202611050002",
+                      "code": "0000",
+                      "message": "Success",
+                      "data": {
+                        "cardId": "K-1c5347989ae04802ae123dcea5330574",
+                        "cardRemark": "marketing campaign"
+                      }
+                    }
+                  },
+                  "clearRemark": {
+                    "summary": "清空备注",
+                    "value": {
+                      "requestNo": "REQ202611050003",
+                      "code": "0000",
+                      "message": "Success",
+                      "data": {
+                        "cardId": "K-1c5347989ae04802ae123dcea5330574",
+                        "cardRemark": null
+                      }
+                    }
+                  },
+                  "cardNotFound": {
+                    "summary": "卡不存在或跨机构",
+                    "value": {
+                      "requestNo": "REQ202611050002",
+                      "code": "KLU0006",
+                      "message": null,
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/common/updateCardRemark": {
+      "post": {
+        "tags": ["通用卡产品"],
+        "summary": "修改卡片备注（对内）",
+        "description": "对内路径；亦可调 /api/cardManagement/updateCardRemark。入参/出参同开放平台。",
+        "operationId": "commonUpdateCardRemark",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CommonUpdateCardRemarkReq" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "业务响应",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OpenApiResultUpdateCardRemark" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CommonUpdateCardRemarkReq": {
+        "type": "object",
+        "description": "修改卡片备注请求（CommonUpdateCardRemarkReq）",
+        "required": ["requestNo", "organizationNo", "secretKey", "cardId"],
+        "properties": {
+          "requestNo": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "请求流水号，每个请求唯一（OpenApiBaseRequestVO，必填）"
+          },
+          "organizationNo": {
+            "type": "string",
+            "description": "Yeewallex 分配的机构号（必填）。经 kun-api 时由 apiCustomerId 映射注入"
+          },
+          "secretKey": {
+            "type": "string",
+            "description": "Yeewallex 分配的密钥（必填）"
+          },
+          "cardId": {
+            "type": "string",
+            "description": "卡 ID，必填。与机构号定位卡；跨机构或不存在返回 KLU0006",
+            "example": "K-1c5347989ae04802ae123dcea5330574"
+          },
+          "customerId": {
+            "type": "string",
+            "description": "客户号/持卡人 ID，可选。传入时额外按 customerId 精确匹配卡归属；建议与开卡时一致"
+          },
+          "cardRemark": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "卡备注，覆盖写。可空；空串或仅空白经 trim 后落库为 null（清空备注）。最大长度 255，超长返回 KLC0003"
+          }
+        }
+      },
+      "CommonUpdateCardRemarkRes": {
+        "type": "object",
+        "description": "修改卡片备注响应（CommonUpdateCardRemarkRes）",
+        "properties": {
+          "cardId": {
+            "type": "string",
+            "description": "卡 ID，与请求一致"
+          },
+          "cardRemark": {
+            "type": "string",
+            "nullable": true,
+            "description": "更新后的卡备注；清空时为 null"
+          }
+        }
+      },
+      "OpenApiResultUpdateCardRemark": {
+        "type": "object",
+        "description": "OpenAPI 统一响应 OpenApiResult&lt;CommonUpdateCardRemarkRes&gt;",
+        "properties": {
+          "requestNo": {
+            "type": "string",
+            "description": "回显请求流水号"
+          },
+          "code": {
+            "type": "string",
+            "description": "业务码：0000=成功；KLC0002=参数缺失；KLC0003=参数非法；KLU0001=机构不存在；KLU0006=卡不存在；KLU0019=机构状态非正常。详见 x-error-codes"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "description": "提示信息；成功时多为 Success，失败时可能为空（以 code 为准）"
+          },
+          "data": {
+            "allOf": [{ "$ref": "#/components/schemas/CommonUpdateCardRemarkRes" }],
+            "nullable": true,
+            "description": "成功时返回 cardId+cardRemark；失败时为 null"
+          }
+        }
+      }
+    }
+  },
+  "x-error-codes": [
+    { "code": "0000", "message": "Success" },
+    { "code": "KLC0002", "message": "必填参数缺失（如 cardId）" },
+    { "code": "KLC0003", "message": "参数格式非法（如 cardRemark 超长）" },
+    { "code": "KLU0001", "message": "机构不存在" },
+    { "code": "KLU0006", "message": "卡信息不存在（含跨机构）" },
+    { "code": "KLU0019", "message": "机构状态非正常（二级冻结等）" }
+  ],
+  "x-kun-api": {
+    "serviceId": 4072,
+    "outerUrl": "/rest/v2.0/api/common/updateCardRemark",
+    "innerUrl": "/api/common/updateCardRemark",
+    "version": 2,
+    "paramMapping": "apiCustomerId → organizationNo"
+  }
+}

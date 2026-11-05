@@ -103,9 +103,12 @@ entries:
   - id: user-cards
     domain: card
     old: { method: GET, path: /rest/v1.0/vcc/user-cards }
-    new: null
-    status: pending_add
-    notes: ["新侧接口计划补齐；path/docs 待填"]
+    new: { method: POST, path: /rest/v2.0/api/common/userCards }
+    status: mapped
+    notes:
+      - "GET→POST；机构维度分页；与 accountCardInfo（必填共享账户号）不同"
+      - "字段权威：references/openapi/userCards.openapi.json"
+      - "status 用 NORMAL/FREEZE/CANCEL/CANCELLING/LOCK；accountMode 1/2 同开卡"
 
   - id: card-open
     domain: card
@@ -148,9 +151,12 @@ entries:
   - id: card-remark
     domain: card
     old: { method: POST, path: /rest/v1.0/vcc/card-remark }
-    new: null
-    status: pending_add
-    notes: ["新侧改备注接口计划补齐；开卡可选 cardRemark；path/docs 待填"]
+    new: { method: POST, path: /rest/v2.0/api/common/updateCardRemark }
+    status: mapped
+    notes:
+      - "旧字段 remark → 新字段 cardRemark（覆盖写；空串/空白 trim 后清空为 null）"
+      - "cardId 必填；customerId 可选但建议传以便归属校验"
+      - "字段权威：references/openapi/updateCardRemark.openapi.json"
 
   - id: card-limit
     domain: card

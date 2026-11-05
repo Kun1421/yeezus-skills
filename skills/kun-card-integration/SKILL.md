@@ -5,7 +5,7 @@ description: >-
   迁移到 opendocs。  覆盖选型、沙箱跑通、可落地代码（签名、判态、查单、异常码处理、授权 A/D）、新旧接口对照与鉴权切换。
   语言对齐 yop-demo：Python/Java/Node/TS/Go/PHP/.NET。当用户提到对接卡、开卡、KYC、充值、共享账户、
   webhook、错误码、KLC、旧VCC迁移、yop-demo、opendocs.kun.global、沙箱联调时使用。
-version: 1.3.1
+version: 1.3.2
 ---
 
 # KUN 卡开放 API 统一对接技能
@@ -51,7 +51,7 @@ version: 1.3.1
 
 | # | 标准 |
 |---|------|
-| 1 | 旧 path → 新 path（含 split / new_only / pending_add） |
+| 1 | 旧 path → 新 path（含 split / new_only；含 userCards / updateCardRemark） |
 | 2 | 鉴权：YOP/yop-demo → 新 RSA 头签步骤 |
 | 3 | GET→POST、`requestNo`+`secretKey` |
 | 4 | 资金查单改造（拆分 + 账户新查单） |
@@ -64,8 +64,7 @@ version: 1.3.1
 
 1. 判定：**新接入** or **旧 VCC 迁移**（或两者：迁移后补判态）。  
 2. 收集：环境、语言（yop-demo 矩阵）、凭证是否齐全、是否 Webhook；迁移则收集已用旧 path 清单。  
-3. `user-cards` / `card-remark`：status=`pending_add`，未上线前不编造新 path。  
-4. 生产切换须二次确认。
+3. 生产切换须二次确认。
 
 **快速通道（新接入）**：商务卡预付虚拟卡 + `<语言>` + 沙箱 → 直接模板 C。  
 **快速通道（迁移）**：已列出旧 `/rest/v1.0/vcc/*` + 语言 → 对照 + 鉴权改造 + 模板 M。
