@@ -12,9 +12,11 @@
 
 ```text
 请用 kun-card-integration 帮我对接合规卡开放 API。
-场景：商务卡、预付模式、虚拟卡。环境：沙箱。语言：Python。
+场景：商务卡、预付模式、虚拟卡。环境：沙箱。语言：TypeScript。
 请给出对接步骤、示例 JSON、可执行命令，以及可落地代码（含 PENDING 判态与超时只查单）。
 ```
+
+语言与 **yop-demo** 对齐：Python / Java / Node.js / TypeScript / Go / PHP / .NET 等均可。
 
 3. **按输出在沙箱执行**；私钥只提供本机文件路径，不要粘贴到聊天。
 
@@ -24,7 +26,7 @@
 
 | 技能 ID | 版本 | 说明 |
 |---------|------|------|
-| [`kun-card-integration`](./skills/kun-card-integration/) | 1.1.0 | 商务卡 / 消费卡 / Webhook；跑通 + 可落地代码 |
+| [`kun-card-integration`](./skills/kun-card-integration/) | 1.3.0 | **统一对接**：新接入 + 旧 VCC 迁移；多语言对齐 yop-demo；见 [CAPABILITY.md](./skills/kun-card-integration/CAPABILITY.md) |
 
 ## 安装
 

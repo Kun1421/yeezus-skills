@@ -1,0 +1,241 @@
+# 旧 VCC (yeevcc /rest/v1.0/vcc) → 新开放 API (/rest/v2.0)
+# 范围：商务卡旧 VCC；消费卡/caas 迁移另册
+# 权威来源：vcc 新旧接口对照.xlsx + api-index.yaml
+version: "1.0.0"
+scope: commercial-legacy-vcc
+no_dual_track: true  # 无双轨期：改完切新，不承诺旧新长期并存
+languages_align: yop-demo
+
+gateways:
+  legacy_docs: "https://open.kun.global/docs/apis/"
+  new_docs: "https://opendocs.kun.global/"
+  new_sandbox: "https://sandbox.kun.global"
+  new_production: "https://openapi.kun.global"
+
+entries:
+  - id: user-info
+    domain: account
+    old: { method: GET, path: /rest/v1.0/vcc/user-info }
+    new: { method: POST, path: /rest/v2.0/caas/account/query-organization-balance }
+    status: mapped
+    notes: ["语义从用户信息收敛为机构余额"]
+
+  - id: card-holders
+    domain: cardholder
+    old: { method: GET, path: /rest/v1.0/vcc/card-holders }
+    new: { method: POST, path: /rest/v2.0/caas/customer/commercial/cardholders }
+    status: mapped
+
+  - id: add-card-holder
+    domain: cardholder
+    old: { method: POST, path: /rest/v1.0/vcc/add-card-holder }
+    new: { method: POST, path: /rest/v2.0/caas/customer/commercial/add-cardholder }
+    status: mapped
+
+  - id: modify-card-holder
+    domain: cardholder
+    old: { method: POST, path: /rest/v1.0/vcc/modify-card-holder }
+    new: { method: POST, path: /rest/v2.0/caas/customer/commercial/modify-cardholder }
+    status: mapped
+
+  - id: user-account-create
+    domain: share-account
+    old: { method: POST, path: /rest/v1.0/vcc/user-account/create }
+    new: { method: POST, path: /rest/v2.0/api/common/userAccount/create }
+    status: mapped
+
+  - id: user-account-modify
+    domain: share-account
+    old: { method: POST, path: /rest/v1.0/vcc/user-account/modify }
+    new: { method: POST, path: /rest/v2.0/api/common/userAccount/modify }
+    status: mapped
+
+  - id: user-account-list
+    domain: share-account
+    old: { method: GET, path: /rest/v1.0/vcc/user-account/list }
+    new: { method: POST, path: /rest/v2.0/api/common/userAccount/list }
+    status: mapped
+
+  - id: user-account-transfer-in
+    domain: share-account
+    old: { method: POST, path: /rest/v1.0/vcc/user-account/transfer-in }
+    new: { method: POST, path: /rest/v2.0/api/common/userAccount/accountTransferIn }
+    status: mapped
+
+  - id: user-account-transfer-out
+    domain: share-account
+    old: { method: POST, path: /rest/v1.0/vcc/user-account/transfer-out }
+    new: { method: POST, path: /rest/v2.0/api/common/userAccount/accountTransferOut }
+    status: mapped
+
+  - id: user-account-trans-detail
+    domain: share-account
+    old: { method: POST, path: /rest/v1.0/vcc/user-account/trans-detail-list }
+    new: { method: POST, path: /rest/v2.0/api/common/userAccount/queryTransDetail }
+    status: mapped
+
+  - id: user-account-cards
+    domain: share-account
+    old: { method: GET, path: /rest/v1.0/vcc/user-account/cards }
+    new: { method: POST, path: /rest/v2.0/api/common/userAccount/accountCardInfo }
+    status: mapped
+
+  - id: account-transfer-in-query
+    domain: share-account
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/common/userAccount/accountTransferInQuery }
+    status: new_only
+    notes: ["旧无账户充值查单；迁移后资金写操作必接"]
+
+  - id: account-transfer-out-query
+    domain: share-account
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/common/userAccount/accountTransferOutQuery }
+    status: new_only
+    notes: ["旧无账户转出查单；迁移后资金写操作必接"]
+
+  - id: card-bins
+    domain: product
+    old: { method: GET, path: /rest/v1.0/vcc/card-bins }
+    new: { method: POST, path: /rest/v2.0/api/common/cardBins }
+    status: mapped
+
+  - id: user-cards
+    domain: card
+    old: { method: GET, path: /rest/v1.0/vcc/user-cards }
+    new: null
+    status: pending_add
+    notes: ["新侧接口计划补齐；path/docs 待填"]
+
+  - id: card-open
+    domain: card
+    old: { method: POST, path: /rest/v1.0/vcc/card-open }
+    new: { method: POST, path: /rest/v2.0/api/common/openCard }
+    status: mapped
+
+  - id: card-open-task
+    domain: card
+    old: { method: GET, path: /rest/v1.0/vcc/card-open-task }
+    new: { method: POST, path: /rest/v2.0/api/common/openCardQuery }
+    status: mapped
+    notes: ["查单键 originalRequestNo = 开卡 requestNo"]
+
+  - id: card-activate
+    domain: card
+    old: { method: POST, path: /rest/v1.0/vcc/card-activate }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardActivation }
+    status: mapped
+
+  - id: card-info
+    domain: card
+    old: { method: GET, path: /rest/v1.0/vcc/card-info }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardBasicInfoQuery }
+    status: mapped
+
+  - id: card-key-info
+    domain: card
+    old: { method: GET, path: /rest/v1.0/vcc/card-key-info }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardInfoQuery }
+    status: mapped
+    notes: ["含 CVV；日志脱敏"]
+
+  - id: card-balance
+    domain: card
+    old: { method: GET, path: /rest/v1.0/vcc/card-balance }
+    new: { method: POST, path: /rest/v2.0/api/accountManagement/queryBalanceByCardId }
+    status: mapped
+
+  - id: card-remark
+    domain: card
+    old: { method: POST, path: /rest/v1.0/vcc/card-remark }
+    new: null
+    status: pending_add
+    notes: ["新侧改备注接口计划补齐；开卡可选 cardRemark；path/docs 待填"]
+
+  - id: card-limit
+    domain: card
+    old: { method: POST, path: /rest/v1.0/vcc/card-limit }
+    new: { method: POST, path: /rest/v2.0/api/common/cardLimitSettingV2 }
+    status: mapped
+
+  - id: card-recharge
+    domain: fund
+    old: { method: POST, path: /rest/v1.0/vcc/card-recharge-v2 }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardRecharge }
+    status: mapped
+
+  - id: card-charge-out
+    domain: fund
+    old: { method: POST, path: /rest/v1.0/vcc/card-charge-out }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardTransferOut }
+    status: mapped
+
+  - id: card-recharge-query
+    domain: fund
+    old: { method: GET, path: /rest/v1.0/vcc/card-recharge-query }
+    new: null
+    status: split
+    split_to:
+      - { method: POST, path: /rest/v2.0/api/cardManagement/cardRechargeStatusQuery, use: recharge }
+      - { method: POST, path: /rest/v2.0/api/cardManagement/cardTransferOutStatusQuery, use: transfer_out }
+    notes: ["旧一查两用；新必须按业务拆分"]
+
+  - id: batch-card-open
+    domain: batch
+    old: { method: POST, path: /rest/v1.0/vcc/batch-card-open }
+    new: { method: POST, path: /rest/v2.0/api/common/batchOpenCard }
+    status: mapped
+
+  - id: batch-card-open-task
+    domain: batch
+    old: { method: GET, path: /rest/v1.0/vcc/batch-card-open-task }
+    new: { method: POST, path: /rest/v2.0/api/common/batchOpenCardTask }
+    status: mapped
+
+  - id: batch-card-cancel
+    domain: batch
+    old: { method: POST, path: /rest/v1.0/vcc/batch-card-cancel }
+    new: { method: POST, path: /rest/v2.0/api/common/batchCancelCard }
+    status: mapped
+
+  - id: batch-card-cancel-result
+    domain: batch
+    old: { method: POST, path: /rest/v1.0/vcc/batch-card-cancel-result }
+    new: { method: POST, path: /rest/v2.0/api/common/batchCancelCardTask }
+    status: mapped
+
+  - id: transactions
+    domain: transaction
+    old: { method: GET, path: /rest/v1.0/vcc/transactions }
+    new: { method: POST, path: /rest/v2.0/caas/card/query-transaction }
+    status: mapped
+
+  - id: auth-transaction-webhook
+    domain: webhook
+    old: { method: POST, path: /rest/v1.0/vcc/auth-transaction-webhook }
+    new: { kind: webhook, ref: "Webhook/Webhook对接.md#授权" }
+    status: mapped
+
+  - id: clearing-webhook
+    domain: webhook
+    old: { method: POST, path: /rest/v1.0/vcc/clearing-webhook }
+    new: { kind: webhook, ref: "Webhook/Webhook对接.md#清算" }
+    status: mapped
+
+  - id: card-ops-webhook
+    domain: webhook
+    old: { method: POST, path: /rest/v1.0/vcc/card-ops-webhook }
+    new: { kind: webhook, ref: "Webhook/Webhook对接.md#卡状态" }
+    status: mapped
+
+  - id: otp-webhook
+    domain: webhook
+    old: { method: POST, path: /rest/v1.0/vcc/otp-webhook }
+    new: { kind: webhook, ref: "Webhook/Webhook对接.md#OTP" }
+    status: mapped
+
+  - id: auth-release-webhook
+    domain: webhook
+    old: { method: POST, path: /rest/v1.0/vcc/auth-release-webhook }
+    new: { kind: webhook, ref: "Webhook/Webhook对接.md#授权释放" }
+    status: mapped
