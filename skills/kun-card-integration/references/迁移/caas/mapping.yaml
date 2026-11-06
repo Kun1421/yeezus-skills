@@ -1,0 +1,353 @@
+# CAAS 迁移对照。只含旧 /rest/v1.0/caas/* 。
+# 不要用于旧 VCC。见 references/迁移/vcc/ 。
+# 权威来源：vcc 新旧接口对照.xlsx 的 caas sheet。
+# status=mapped：只把 /rest/v1.0/ 换成 /rest/v2.0/，参数与旧版相同。
+# status=recommended：建议迁，旧接口仍可用。
+# status=new_only：旧 CAAS 没有。
+version: "1.0.0"
+scope: consumer-legacy-caas
+params_unchanged_on_mapped: true
+entries:
+  - id: page-query-organization-fee-detail
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/account/page-query-organization-fee-detail }
+    new: { method: POST, path: /rest/v2.0/caas/account/page-query-organization-fee-detail }
+    status: mapped
+  - id: query-organization-balance
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/account/query-organization-balance }
+    new: { method: POST, path: /rest/v2.0/caas/account/query-organization-balance }
+    status: mapped
+  - id: kyc-submit
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/customer/kyc-submit }
+    new: { method: POST, path: /rest/v2.0/caas/customer/kyc-submit }
+    status: mapped
+  - id: kyc-result-inquiry
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/customer/kyc-result-inquiry }
+    new: { method: POST, path: /rest/v2.0/caas/customer/kyc-result-inquiry }
+    status: mapped
+  - id: kyc-update
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/customer/kyc-update }
+    new: { method: POST, path: /rest/v2.0/caas/customer/kyc-update }
+    status: mapped
+  - id: update-mailing-address
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/customer/update-mailing-address }
+    new: { method: POST, path: /rest/v2.0/caas/customer/update-mailing-address }
+    status: mapped
+  - id: update-email-phone
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/customer/update-email-phone }
+    new: { method: POST, path: /rest/v2.0/caas/customer/update-email-phone }
+    status: mapped
+  - id: apply-card
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/apply-card }
+    new: { method: POST, path: /rest/v2.0/caas/card/apply-card }
+    status: mapped
+    notes:
+      - "老开卡仍可用，请求和响应字段不变，只把版本段换成 v2.0"
+      - "建议改用开卡 V2：POST /rest/v2.0/api/common/openCard"
+      - "留在旧开卡时，查单仍用 query-apply-card-status"
+  - id: mcc-setting
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/mcc-setting }
+    new: { method: POST, path: /rest/v2.0/caas/card/mcc-setting }
+    status: mapped
+  - id: query-apply-card-status
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/query-apply-card-status }
+    new: { method: POST, path: /rest/v2.0/caas/card/query-apply-card-status }
+    status: mapped
+    notes:
+      - "只服务仍在用的 apply-card，字段不变"
+      - "开卡 V2 不要用本接口，改用 openCardQuery（originalRequestNo）"
+  - id: activation
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/activation }
+    new: { method: POST, path: /rest/v2.0/caas/card/activation }
+    status: mapped
+  - id: card-basic-info
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/card-basic-info }
+    new: { method: POST, path: /rest/v2.0/caas/card/card-basic-info }
+    status: mapped
+  - id: query-card-info
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/query-card-info }
+    new: { method: POST, path: /rest/v2.0/caas/card/query-card-info }
+    status: mapped
+  - id: recharge
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/recharge }
+    new: { method: POST, path: /rest/v2.0/caas/card/recharge }
+    status: mapped
+  - id: recharge-status-query
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/recharge-status-query }
+    new: { method: POST, path: /rest/v2.0/caas/card/recharge-status-query }
+    status: mapped
+  - id: query-recharge-detail-by-page
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/query-recharge-detail-by-page }
+    new: { method: POST, path: /rest/v2.0/caas/card/query-recharge-detail-by-page }
+    status: mapped
+  - id: freeze-and-unfreeze-card
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/freeze-and-unfreeze-card }
+    new: { method: POST, path: /rest/v2.0/caas/card/freeze-and-unfreeze-card }
+    status: mapped
+  - id: cancellation
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/cancellation }
+    new: { method: POST, path: /rest/v2.0/caas/card/cancellation }
+    status: mapped
+  - id: query-card-balance
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/customer/query-card-balance }
+    new: { method: POST, path: /rest/v2.0/caas/customer/query-card-balance }
+    status: mapped
+  - id: limit-config
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/limit-config }
+    new: { method: POST, path: /rest/v2.0/caas/card/limit-config }
+    status: mapped
+  - id: apply-physical-card
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/apply-physical-card }
+    new: { method: POST, path: /rest/v2.0/caas/card/apply-physical-card }
+    status: mapped
+  - id: send-activate-verify-code
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/send-activate-verify-code }
+    new: { method: POST, path: /rest/v2.0/caas/card/send-activate-verify-code }
+    status: mapped
+  - id: verify-physical-card-active
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/verify-physical-card-active }
+    new: { method: POST, path: /rest/v2.0/caas/card/verify-physical-card-active }
+    status: mapped
+  - id: damaged-card-replacement
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/damaged-card-replacement }
+    new: { method: POST, path: /rest/v2.0/caas/card/damaged-card-replacement }
+    status: mapped
+  - id: remove-block-code
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/remove-block-code }
+    new: { method: POST, path: /rest/v2.0/caas/card/remove-block-code }
+    status: mapped
+  - id: lost-report
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/lost-report }
+    new: { method: POST, path: /rest/v2.0/caas/card/lost-report }
+    status: mapped
+  - id: get-pin-setup-url
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/get-pin-setup-url }
+    new: { method: POST, path: /rest/v2.0/caas/card/get-pin-setup-url }
+    status: mapped
+  - id: presale-card-apply
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/presale-card-apply }
+    new: { method: POST, path: /rest/v2.0/caas/card/presale-card-apply }
+    status: mapped
+  - id: query-presale-apply-result
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/query-presale-apply-result }
+    new: { method: POST, path: /rest/v2.0/caas/card/query-presale-apply-result }
+    status: mapped
+  - id: presale-card-activation
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/presale-card-activation }
+    new: { method: POST, path: /rest/v2.0/caas/card/presale-card-activation }
+    status: mapped
+  - id: query-transaction
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/query-transaction }
+    new: { method: POST, path: /rest/v2.0/caas/card/query-transaction }
+    status: mapped
+  - id: base64upload
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/file/base64upload }
+    new: { method: POST, path: /rest/v2.0/caas/file/base64upload }
+    status: mapped
+  - id: recon-file-download
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/file/recon-file-download }
+    new: { method: POST, path: /rest/v2.0/caas/file/recon-file-download }
+    status: mapped
+  - id: kyc-notify
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/customer/kyc-notify }
+    new: { method: POST, path: /rest/v2.0/caas/customer/kyc-notify }
+    status: mapped
+  - id: transaction
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/webhook/transaction }
+    new: { method: POST, path: /rest/v2.0/caas/webhook/transaction }
+    status: mapped
+  - id: result-nofity
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/transaction/result-nofity }
+    new: { method: POST, path: /rest/v2.0/caas/transaction/result-nofity }
+    status: mapped
+  - id: otp-3ds
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/webhook/otp-3ds }
+    new: { method: POST, path: /rest/v2.0/caas/webhook/otp-3ds }
+    status: mapped
+  - id: kyc-completion-notify
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/customer/kyc-completion-notify }
+    new: { method: POST, path: /rest/v2.0/caas/customer/kyc-completion-notify }
+    status: mapped
+  - id: card-token-notify
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/webhook/card-token-notify }
+    new: { method: POST, path: /rest/v2.0/caas/webhook/card-token-notify }
+    status: mapped
+  - id: add-block-code-notify
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/webhook/add-block-code-notify }
+    new: { method: POST, path: /rest/v2.0/caas/webhook/add-block-code-notify }
+    status: mapped
+  - id: pin-setup
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/webhook/pin-setup }
+    new: { method: POST, path: /rest/v2.0/caas/webhook/pin-setup }
+    status: mapped
+  - id: card-status-update
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/webhook/card-status-update }
+    new: { method: POST, path: /rest/v2.0/caas/webhook/card-status-update }
+    status: mapped
+  - id: clearing
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/webhook/clearing }
+    new: { method: POST, path: /rest/v2.0/caas/webhook/clearing }
+    status: mapped
+  - id: auth-release
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/webhook/auth-release }
+    new: { method: POST, path: /rest/v2.0/caas/webhook/auth-release }
+    status: mapped
+  - id: presale-card-apply-result
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/webhook/presale-card-apply-result }
+    new: { method: POST, path: /rest/v2.0/caas/webhook/presale-card-apply-result }
+    status: mapped
+  - id: inital-kyc-url
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/customer/inital-kyc-url }
+    new: { method: POST, path: /rest/v2.0/caas/customer/inital-kyc-url }
+    status: mapped
+  - id: response-code-list
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/response-code-list }
+    new: { method: POST, path: /rest/v2.0/caas/response-code-list }
+    status: mapped
+  - id: webhook-sign-key-config
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/config/webhook-sign-key-config }
+    new: { method: POST, path: /rest/v2.0/caas/config/webhook-sign-key-config }
+    status: mapped
+  - id: packaging-address-add
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/address/packaging-address-add }
+    new: { method: POST, path: /rest/v2.0/caas/address/packaging-address-add }
+    status: mapped
+  - id: default-packaging-address
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/address/default-packaging-address }
+    new: { method: POST, path: /rest/v2.0/caas/address/default-packaging-address }
+    status: mapped
+  - id: packaging-address-update
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/address/packaging-address-update }
+    new: { method: POST, path: /rest/v2.0/caas/address/packaging-address-update }
+    status: mapped
+  - id: open-card-v2
+    domain: caas
+    old: { method: POST, path: /rest/v1.0/caas/card/apply-card }
+    new: { method: POST, path: /rest/v2.0/api/common/openCard }
+    status: recommended
+    notes:
+      - "建议从旧 apply-card 迁到开卡 V2。旧 apply-card 的 v2.0 路径仍可用"
+      - "与旧 apply-card 隔离，不要把两套开卡混在同一笔 requestNo"
+      - "查单用 open-card-v2-query，键为 originalRequestNo"
+  - id: open-card-v2-query
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/common/openCardQuery }
+    status: new_only
+    notes:
+      - "V2 新增。按开卡请求号查询：originalRequestNo = openCard 的 requestNo"
+      - "不替代 query-apply-card-status。后者只查仍走 apply-card 的单"
+  - id: kyc-sumsub-shareToken
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/caas/customer/kyc-sumsub-shareToken }
+    status: new_only
+    notes:
+      - "V2 新增 Sumsub 共享 KYC。同步只表示已受理，终态走既有 kyc-notify"
+      - "见 迁移总览.md 的 Sumsub 流程"
+  - id: account-transfer-in-query
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/common/accountTransferInQuery }
+    status: new_only
+    notes:
+      - "表中「原来没有账户充值状态查询」"
+  - id: account-transfer-out-query
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/common/accountTransferOutQuery }
+    status: new_only
+    notes:
+      - "表中「原来没有账户转出状态查询」"
+  - id: card-transfer-out
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardTransferOut }
+    status: new_only
+    notes:
+      - "表中「原来没有卡转出」"
+  - id: card-transfer-out-status-query
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardTransferOutStatusQuery }
+    status: new_only
+    notes:
+      - "表中「原来没有卡转出状态查询」"
+  - id: batch-open-card
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/common/batchOpenCard }
+    status: new_only
+    notes:
+      - "表中「原来没有批量开卡」"
+  - id: batch-open-card-task
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/common/batchOpenCardTask }
+    status: new_only
+    notes:
+      - "表中「原来没有批量开卡任务查询」"
+  - id: batch-cancel-card
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/common/batchCancelCard }
+    status: new_only
+    notes:
+      - "表中「原来没有批量销卡」"
+  - id: batch-cancel-card-task
+    domain: caas
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/common/batchCancelCardTask }
+    status: new_only
+    notes:
+      - "表中「原来没有批量销卡任务查询」"
