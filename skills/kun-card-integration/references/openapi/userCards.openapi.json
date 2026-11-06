@@ -1,0 +1,389 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "KL CaaS - 机构下分页查询卡片",
+    "description": "机构下分页查卡。\n\n- 开放平台：POST /rest/v2.0/api/common/userCards，请求头 API version=2；kun-api 将 apiCustomerId 映射为 organizationNo。\n- 对内：POST /api/common/userCards（兼 /api/cardManagement/userCards）。\n- 与 accountCardInfo 区别：本接口按机构维度分页，accountNo 可选；accountCardInfo 必填共享账户号。\n- accountMode 同开卡：CardModeEnum，1=预充值 / 2=共享账户，直接对应卡表 card_mode（不做 1↔2 对调）。\n- status 使用 KL 枚举：NORMAL / FREEZE / CANCEL / CANCELLING / LOCK。",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://{host}",
+      "description": "开放平台 kun-api（outer）",
+      "variables": { "host": { "default": "openapi.example.com" } }
+    },
+    {
+      "url": "https://{host}/linkage-customer",
+      "description": "kun-linkage-customer（对内）",
+      "variables": { "host": { "default": "qa-caas.yeewallex.hk" } }
+    }
+  ],
+  "tags": [
+    {
+      "name": "通用卡产品",
+      "description": "CommonCardFacade → CommonCardService → CardManagementBizService#userCards"
+    }
+  ],
+  "paths": {
+    "/rest/v2.0/api/common/userCards": {
+      "post": {
+        "tags": ["通用卡产品"],
+        "summary": "机构下分页查询卡片",
+        "description": "分页获取机构下卡片。开放平台 version=2。按 create_time 倒序；限额取该卡有效限额配置第一条并计算剩余。",
+        "operationId": "openApiUserCards",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "required": true,
+            "description": "API 版本，固定传 2（与 tbl_gw_service.version 匹配；以实际网关头名为准）",
+            "schema": { "type": "string", "enum": ["2"], "default": "2" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CommonUserCardsReq" },
+              "example": {
+                "requestNo": "REQ202611050001",
+                "organizationNo": "ORG001",
+                "secretKey": "your-secret-key",
+                "status": "NORMAL",
+                "accountMode": 2,
+                "cardRemark": "marketing",
+                "accountNo": "",
+                "startDate": "2025-01-01",
+                "endDate": "2026-12-31",
+                "current": 1,
+                "size": 20
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "HTTP 恒 200；业务成败看 code（0000 成功）",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OpenApiResultPageUserCards" },
+                "examples": {
+                  "success": {
+                    "summary": "成功",
+                    "value": {
+                      "requestNo": "REQ202611050001",
+                      "code": "0000",
+                      "message": "Success",
+                      "data": {
+                        "pageNum": 1,
+                        "pageSize": 20,
+                        "pages": 1,
+                        "total": 1,
+                        "data": [
+                          {
+                            "customerId": "C10001",
+                            "accountNo": "001123456789",
+                            "cardId": "K-1c5347989ae04802ae123dcea5330574",
+                            "cardNumber": "4111****1111",
+                            "accountMode": 2,
+                            "cardStatus": "NORMAL",
+                            "cardRemark": "marketing",
+                            "cardCurrency": "USD",
+                            "openCardTime": "2026-01-15T10:20:30",
+                            "firstName": "Alice",
+                            "lastName": "Wong",
+                            "email": "alice@x.com",
+                            "mobilePrefix": "852",
+                            "phone": "91234567",
+                            "perTransLimit": 1000,
+                            "dayLimit": 5000,
+                            "monthLimit": 20000,
+                            "cardLifeCycleLimit": 100000,
+                            "dailyAvailableLimit": 4000,
+                            "monthlyAvailableLimit": 18000,
+                            "lifetimeAvailableLimit": 95000
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "invalidAccountMode": {
+                    "summary": "accountMode 非法",
+                    "value": {
+                      "requestNo": "REQ202611050001",
+                      "code": "KLC0003",
+                      "message": null,
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/common/userCards": {
+      "post": {
+        "tags": ["通用卡产品"],
+        "summary": "机构下分页查询卡片（对内）",
+        "description": "对内路径；亦可调 /api/cardManagement/userCards。入参/出参同开放平台。",
+        "operationId": "commonUserCards",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CommonUserCardsReq" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "业务响应",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OpenApiResultPageUserCards" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CommonUserCardsReq": {
+        "type": "object",
+        "description": "机构下分页查询卡片请求（CommonUserCardsReq）",
+        "required": ["requestNo", "organizationNo", "secretKey", "current", "size"],
+        "properties": {
+          "requestNo": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "请求流水号，每个请求唯一（OpenApiBaseRequestVO，必填）"
+          },
+          "organizationNo": {
+            "type": "string",
+            "description": "Yeewallex 分配的机构号（必填）。经 kun-api 时由请求侧 apiCustomerId 映射注入，商户可不必显式传"
+          },
+          "secretKey": {
+            "type": "string",
+            "description": "Yeewallex 分配的密钥（必填）。经 kun-api 时通常由网关侧处理"
+          },
+          "status": {
+            "type": "string",
+            "description": "卡状态过滤，可选。NORMAL=正常、FREEZE=冻结、CANCEL=已注销、CANCELLING=销卡中、LOCK=锁定。非法值返回 KLC0003；不传则不过滤",
+            "enum": ["NORMAL", "FREEZE", "CANCEL", "CANCELLING", "LOCK"]
+          },
+          "accountMode": {
+            "type": "integer",
+            "description": "账户模式，可选；同开卡 accountMode / CardModeEnum：1=预充值，2=共享账户。直接过滤卡表 card_mode；非法值返回 KLC0003；不传则不过滤",
+            "enum": [1, 2]
+          },
+          "cardRemark": {
+            "type": "string",
+            "description": "卡备注模糊匹配，可选。与 remark 二选一，本字段非空时优先。trim 后为空则不参与过滤"
+          },
+          "remark": {
+            "type": "string",
+            "description": "卡备注模糊匹配（兼容字段名），可选。仅当 cardRemark 为空时生效"
+          },
+          "accountNo": {
+            "type": "string",
+            "description": "账户号，可选。传入时精确匹配该账户下的卡（常用于筛共享账户下卡）"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "开卡时间范围起始，可选，格式 yyyy-MM-dd（含当日 00:00:00）。格式非法返回 KLC0003"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "开卡时间范围结束，可选，格式 yyyy-MM-dd（含当日 23:59:59）。格式非法返回 KLC0003"
+          },
+          "current": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "description": "页码，从 1 开始；小于 1 时按 1 处理（必填）"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 20,
+            "description": "每页条数，范围 1~200；超过 200 按 200 截断（必填）"
+          }
+        }
+      },
+      "CommonAccountCardInfoRes": {
+        "type": "object",
+        "description": "卡信息（含持卡人摘要与限额），对应 CommonAccountCardInfoRes",
+        "properties": {
+          "customerId": {
+            "type": "string",
+            "description": "客户号/持卡人 ID，来自卡表 customer_id"
+          },
+          "accountNo": {
+            "type": "string",
+            "description": "账户号，来自卡表 account_no"
+          },
+          "cardId": {
+            "type": "string",
+            "description": "卡 ID，来自卡表 card_id（通常 K- 开头）"
+          },
+          "cardNumber": {
+            "type": "string",
+            "description": "卡号（脱敏），来自卡表 masked_card_no"
+          },
+          "accountMode": {
+            "type": "integer",
+            "description": "账户模式，同开卡 accountMode / CardModeEnum：1=预充值，2=共享账户；对应卡表 card_mode",
+            "enum": [1, 2]
+          },
+          "cardStatus": {
+            "type": "string",
+            "description": "卡状态，来自卡表 card_status：NORMAL/FREEZE/CANCEL/CANCELLING/LOCK 等"
+          },
+          "cardRemark": {
+            "type": "string",
+            "nullable": true,
+            "description": "卡备注，来自卡表 card_remark"
+          },
+          "cardCurrency": {
+            "type": "string",
+            "description": "卡币种，来自卡表 currency_code"
+          },
+          "openCardTime": {
+            "type": "string",
+            "format": "date-time",
+            "description": "开卡时间，来自卡表 create_time"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true,
+            "description": "持卡人名，来自卡表 cardholder_first_name"
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true,
+            "description": "持卡人姓，来自卡表 cardholder_last_name"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true,
+            "description": "持卡人邮箱，来自卡表 email"
+          },
+          "mobilePrefix": {
+            "type": "string",
+            "nullable": true,
+            "description": "手机区号，来自卡表 mobile_phone_area"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true,
+            "description": "手机号，来自卡表 mobile_phone"
+          },
+          "perTransLimit": {
+            "type": "number",
+            "nullable": true,
+            "description": "单笔限额；取该卡有效限额配置第一条的 singleTransactionLimitAmount，无配置则为空"
+          },
+          "dayLimit": {
+            "type": "number",
+            "nullable": true,
+            "description": "日限额；取限额配置 dailyLimitAmount，无配置则为空"
+          },
+          "monthLimit": {
+            "type": "number",
+            "nullable": true,
+            "description": "月限额；取限额配置 monthlyLimitAmount，无配置则为空"
+          },
+          "cardLifeCycleLimit": {
+            "type": "number",
+            "nullable": true,
+            "description": "生命周期/总额度限额；取限额配置 totalLimitAmount，无配置则为空"
+          },
+          "dailyAvailableLimit": {
+            "type": "number",
+            "nullable": true,
+            "description": "日剩余限额；按 lastUsedDate 计算后的 dailyLimitRemainingAmount，无配置则为空"
+          },
+          "monthlyAvailableLimit": {
+            "type": "number",
+            "nullable": true,
+            "description": "月剩余限额；按 lastUsedDate 计算后的 monthlyLimitRemainingAmount，无配置则为空"
+          },
+          "lifetimeAvailableLimit": {
+            "type": "number",
+            "nullable": true,
+            "description": "生命周期剩余限额；totalLimitRemainingAmount，无配置则为空"
+          }
+        }
+      },
+      "PageResultUserCards": {
+        "type": "object",
+        "description": "分页结果 PageResult&lt;CommonAccountCardInfoRes&gt;",
+        "properties": {
+          "pageNum": {
+            "type": "integer",
+            "description": "当前页码"
+          },
+          "pageSize": {
+            "type": "integer",
+            "description": "每页条数"
+          },
+          "pages": {
+            "type": "integer",
+            "description": "总页数，由 total 与 pageSize 计算"
+          },
+          "total": {
+            "type": "integer",
+            "description": "符合条件的总记录数"
+          },
+          "data": {
+            "type": "array",
+            "description": "当前页卡列表",
+            "items": { "$ref": "#/components/schemas/CommonAccountCardInfoRes" }
+          }
+        }
+      },
+      "OpenApiResultPageUserCards": {
+        "type": "object",
+        "description": "OpenAPI 统一响应 OpenApiResult&lt;PageResult&lt;CommonAccountCardInfoRes&gt;&gt;",
+        "properties": {
+          "requestNo": {
+            "type": "string",
+            "description": "回显请求流水号"
+          },
+          "code": {
+            "type": "string",
+            "description": "业务码：0000=成功；KLC0003=参数非法；KLU0001=机构不存在；KLU0019=机构状态非正常。详见 x-error-codes"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "description": "提示信息；成功时多为 Success，失败时可能为空（以 code 为准）"
+          },
+          "data": {
+            "allOf": [{ "$ref": "#/components/schemas/PageResultUserCards" }],
+            "nullable": true,
+            "description": "成功时为分页对象；失败时为 null"
+          }
+        }
+      }
+    }
+  },
+  "x-error-codes": [
+    { "code": "0000", "message": "Success" },
+    { "code": "KLC0002", "message": "必填参数缺失" },
+    { "code": "KLC0003", "message": "参数格式非法（含非法 accountMode / 日期 / status）" },
+    { "code": "KLU0001", "message": "机构不存在" },
+    { "code": "KLU0019", "message": "机构状态非正常（二级冻结等）" }
+  ],
+  "x-kun-api": {
+    "serviceId": 4071,
+    "outerUrl": "/rest/v2.0/api/common/userCards",
+    "innerUrl": "/api/common/userCards",
+    "version": 2,
+    "paramMapping": "apiCustomerId → organizationNo"
+  }
+}
