@@ -1,12 +1,12 @@
 # KUN 卡开放 API 统一对接技能
 
-[![版本](https://img.shields.io/badge/version-1.3.2-blue)](./SKILL.md)
+[![版本](https://img.shields.io/badge/version-1.3.3-blue)](./SKILL.md)
 
 > **一套 skill**：新客户接入（商务卡 / 消费卡 / Webhook）+ 旧 VCC（YOP / open.kun）迁移到 opendocs。  
 > 技能 ID：`kun-card-integration`  
 > **完整能力清单：** [CAPABILITY.md](./CAPABILITY.md)  
 > **语言：** 对齐 yop-demo（Python / Java / Node / TS / Go / PHP / .NET…）  
-> **迁移：** 无双轨期；含 `userCards` / `updateCardRemark` 对照
+> **迁移：** 无双轨期；含能力差异（身份、字段、缺口）与 `userCards` / `updateCardRemark` 对照
 
 对外指南：[../../docs/外部机构快速对接指南.md](../../docs/外部机构快速对接指南.md)
 
@@ -32,7 +32,7 @@ kun-card-integration/
 │   └── lookup_mapping.py    # 旧→新对照查询
 └── references/
     ├── 产品能力/            # 选型、跑通、状态、字段、多语言、商务/消费/Webhook
-    ├── 迁移/                # 迁移总览、对照表、鉴权、mapping.yaml
+    ├── 迁移/                # 迁移总览、对照表、能力差异、鉴权、mapping.yaml
     ├── 平台文档/
     └── openapi/
 ```

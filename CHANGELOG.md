@@ -2,6 +2,10 @@
 
 最新条目置顶；技能版本以各自 `SKILL.md` frontmatter 为准。
 
+## kun-card-integration 1.3.3 - 2026-11-06
+
+旧 VCC 迁移补充对外能力差异：新增 `references/迁移/能力差异.md`（身份、卡定位、产品码、账户模式、同能力字段、缺口与新增查询）。`mapping.yaml` 增加冻结/解冻、销卡、MCC、对账文件、Webhook 密钥，以及 `user-info`/`clear-record`/`card-swap` 的 partial/gap。
+
 ## kun-card-integration 1.3.2 - 2026-11-05
 
 补齐旧 VCC `user-cards` / `card-remark` 对照：`POST /rest/v2.0/api/common/userCards`、`POST /rest/v2.0/api/common/updateCardRemark`；纳入 mapping、字段要求、商务卡对接、api-index 与本地 OpenAPI 片段。

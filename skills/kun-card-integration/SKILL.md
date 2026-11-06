@@ -5,7 +5,7 @@ description: >-
   迁移到 opendocs。  覆盖选型、沙箱跑通、可落地代码（签名、判态、查单、异常码处理、授权 A/D）、新旧接口对照与鉴权切换。
   语言对齐 yop-demo：Python/Java/Node/TS/Go/PHP/.NET。当用户提到对接卡、开卡、KYC、充值、共享账户、
   webhook、错误码、KLC、旧VCC迁移、yop-demo、opendocs.kun.global、沙箱联调时使用。
-version: 1.3.2
+version: 1.3.3
 ---
 
 # KUN 卡开放 API 统一对接技能
@@ -51,7 +51,7 @@ version: 1.3.2
 
 | # | 标准 |
 |---|------|
-| 1 | 旧 path → 新 path（含 split / new_only；含 userCards / updateCardRemark） |
+| 1 | 旧 path → 新 path（含 split / partial / gap / new_only；含能力差异） |
 | 2 | 鉴权：YOP/yop-demo → 新 RSA 头签步骤 |
 | 3 | GET→POST、`requestNo`+`secretKey` |
 | 4 | 资金查单改造（拆分 + 账户新查单） |
@@ -79,6 +79,7 @@ version: 1.3.2
 | 几分钟跑通 | `产品能力/最小跑通.md` |
 | **旧 VCC 迁移** | `迁移/迁移总览.md` |
 | 新旧对照 | `迁移/接口对照表.md` · `迁移/mapping.yaml` |
+| 同能力字段 / 缺口 | `迁移/能力差异.md` |
 | 鉴权从 YOP 切换 | `迁移/鉴权迁移.md` |
 | 多语言 | `产品能力/多语言对齐.md` |
 | 状态/异常/查单 | `产品能力/状态判断与异常处理.md` |
@@ -101,7 +102,7 @@ version: 1.3.2
 ### 旧 VCC 迁移
 
 1. `迁移总览`（无双轨）→ 2. `鉴权迁移`（yop-demo → 新 RSA）  
-3. `lookup_mapping` / 对照表替换 path → 4. 资金查单与 Webhook  
+3. `lookup_mapping` / 对照表替换 path → 按 `能力差异.md` 改字段语义 → 4. 资金查单与 Webhook  
 5. 按语言改客户端 → 6. 沙箱冒烟 → 7. 切换清单 → 模板 M  
 8. 判态与异常码挂接 `状态判断与异常处理.md` + `异常码处理.md`
 
@@ -141,7 +142,7 @@ version: 1.3.2
 ## 附加资源
 
 - [CAPABILITY.md](./CAPABILITY.md) · [多语言对齐](references/产品能力/多语言对齐.md)  
-- [最小跑通](references/产品能力/最小跑通.md) · [迁移总览](references/迁移/迁移总览.md)  
+- [最小跑通](references/产品能力/最小跑通.md) · [迁移总览](references/迁移/迁移总览.md) · [能力差异](references/迁移/能力差异.md)  
 - [状态判断与异常处理](references/产品能力/状态判断与异常处理.md) · [异常码处理](references/产品能力/异常码处理.md)  
 - [examples](examples/) · [scripts](scripts/)  
 - [opendocs](https://opendocs.kun.global/)

@@ -69,12 +69,16 @@ def fmt(entry: dict) -> str:
 def main() -> None:
     p = argparse.ArgumentParser(description="Lookup legacy VCC → new API mapping")
     p.add_argument("query", nargs="?", help="old path fragment / id / keyword")
-    p.add_argument("--list-pending", action="store_true", help="list pending_add / split / new_only")
+    p.add_argument(
+        "--list-pending",
+        action="store_true",
+        help="list pending_add / split / partial / gap / new_only",
+    )
     args = p.parse_args()
     entries = load_entries()
     if args.list_pending:
         for e in entries:
-            if e.get("status") in ("pending_add", "split", "new_only"):
+            if e.get("status") in ("pending_add", "split", "partial", "gap", "new_only"):
                 print(fmt(e))
                 print("---")
         return

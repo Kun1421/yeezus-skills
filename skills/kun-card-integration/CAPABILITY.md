@@ -1,6 +1,6 @@
 # kun-card-integration 完整能力清单
 
-技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.2**）。
+技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.3**）。
 
 一套 skill = **新客户对接** + **旧 VCC 迁移** + **多语言可落地代码** + **异常码处理**。
 
@@ -58,6 +58,7 @@ kun-card-integration
 | 范围 | **仅商务卡**旧 `/rest/v1.0/vcc/*`；消费卡 caas 另册 |
 | 范式切换 | YOP（yop-demo）→ 新 RSA 头签 + `secretKey`/`requestNo` |
 | 接口对照 | `迁移/mapping.yaml` + `接口对照表.md` |
+| 能力差异 | `迁移/能力差异.md`：身份/卡定位/产品码/账户模式、同能力字段、partial/gap |
 | 查询拆分 | 旧 `card-recharge-query` → 充值查单 / 转出查单 |
 | 新增查单 | 账户充值/转出状态查询（旧无） |
 | 查卡 / 改备注 | `user-cards`→`userCards`；`card-remark`→`updateCardRemark`（已 mapped） |

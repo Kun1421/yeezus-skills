@@ -1,7 +1,8 @@
 # 旧 VCC (yeevcc /rest/v1.0/vcc) → 新开放 API (/rest/v2.0)
 # 范围：商务卡旧 VCC；消费卡/caas 迁移另册
-# 权威来源：vcc 新旧接口对照.xlsx + api-index.yaml
-version: "1.0.0"
+# 权威来源：vcc 新旧接口对照.xlsx + api-index.yaml + 能力差异.md
+# 状态：mapped | split | partial | gap | new_only
+version: "1.1.0"
 scope: commercial-legacy-vcc
 no_dual_track: true  # 无双轨期：改完切新，不承诺旧新长期并存
 languages_align: yop-demo
@@ -17,8 +18,11 @@ entries:
     domain: account
     old: { method: GET, path: /rest/v1.0/vcc/user-info }
     new: { method: POST, path: /rest/v2.0/caas/account/query-organization-balance }
-    status: mapped
-    notes: ["语义从用户信息收敛为机构余额"]
+    status: partial
+    notes:
+      - "只覆盖机构余额，不是商户多钱包一包返回"
+      - "手续费明细另见 organization-fee-detail（new_only）"
+      - "字段差异见 能力差异.md"
 
   - id: card-holders
     domain: cardholder
@@ -215,6 +219,84 @@ entries:
     old: { method: GET, path: /rest/v1.0/vcc/transactions }
     new: { method: POST, path: /rest/v2.0/caas/card/query-transaction }
     status: mapped
+    notes: ["筛选项变少；分页字段改为 pageNum/pageSize"]
+
+  - id: card-cancel
+    domain: card
+    old: { method: POST, path: /rest/v1.0/vcc/card-cancel }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cancelCard }
+    status: mapped
+    notes: ["旧入参含 refundCurrency、出参含退款明细；新入参无退款币种，出参以订单状态为主"]
+
+  - id: card-freeze
+    domain: card
+    old: { method: POST, path: /rest/v1.0/vcc/card-freeze }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardFreezeAndUnFreezes }
+    status: mapped
+    notes: ["与 card-unfreeze 合并为同一接口；本路径传 operationType=FREEZE_CARD"]
+
+  - id: card-unfreeze
+    domain: card
+    old: { method: POST, path: /rest/v1.0/vcc/card-unfreeze }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardFreezeAndUnFreezes }
+    status: mapped
+    notes: ["与 card-freeze 合并为同一接口；本路径传 operationType=UNFREEZE_CARD"]
+
+  - id: card-mcc-rule
+    domain: card
+    old: { method: GET, path: /rest/v1.0/vcc/card-mcc-rule }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardBasicInfoQuery }
+    status: partial
+    notes: ["无独立 MCC 查询接口；从卡基本信息的 mccConfig 读取"]
+
+  - id: modify-card-mcc-rule
+    domain: card
+    old: { method: POST, path: /rest/v1.0/vcc/modify-card-mcc-rule }
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/cardMccSetting }
+    status: mapped
+    notes: ["ruleType→mccRuleType；status→ruleStatus；mccList 字段名不变"]
+
+  - id: download-reconciliation-file
+    domain: transaction
+    old: { method: POST, path: /rest/v1.0/vcc/download-reconciliation-file }
+    new: { method: POST, path: /rest/v2.0/caas/file/recon-file-download }
+    status: mapped
+    notes: ["日期字段 date → fileDate"]
+
+  - id: api-config-modify
+    domain: webhook
+    old: { method: POST, path: /rest/v1.0/vcc/api-config/modify }
+    new: { method: POST, path: /rest/v2.0/caas/config/webhook-sign-key-config }
+    status: mapped
+    notes: ["配置体以 signKey 为主；不再拆获取/修改两个接口"]
+
+  - id: clear-record
+    domain: transaction
+    old: { method: GET, path: /rest/v1.0/vcc/clear-record }
+    new: null
+    status: gap
+    notes: ["无商务清算分页列表；用清算 Webhook 自行落库后查询"]
+
+  - id: card-swap
+    domain: card
+    old: { method: POST, path: /rest/v1.0/vcc/card-swap }
+    new: null
+    status: gap
+    notes: ["公开文档未收录与旧一键换卡同名的接口；迁移前向平台确认，不要自造 path"]
+
+  - id: organization-fee-detail
+    domain: account
+    old: null
+    new: { method: POST, path: /rest/v2.0/caas/account/page-query-organization-fee-detail }
+    status: new_only
+    notes: ["旧无机构手续费明细分页"]
+
+  - id: card-recharge-detail
+    domain: fund
+    old: null
+    new: { method: POST, path: /rest/v2.0/api/cardManagement/pageQueryCardRechargeDetail }
+    status: new_only
+    notes: ["旧无卡充值明细分页"]
 
   - id: auth-transaction-webhook
     domain: webhook
