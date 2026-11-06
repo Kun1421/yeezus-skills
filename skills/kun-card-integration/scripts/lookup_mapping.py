@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""按旧 VCC path / 关键字查询新旧接口对照（references/迁移/vcc/mapping.yaml）。
+"""按旧 path 查询新旧接口对照。
 
-不查询 CAAS。旧 /rest/v1.0/caas/* 见 references/迁移/caas/迁移总览.md。
+- /rest/v1.0/vcc/* → references/迁移/vcc/mapping.yaml
+- /rest/v1.0/caas/* → references/迁移/caas/mapping.yaml
 """
 from __future__ import annotations
 
@@ -17,12 +18,21 @@ except ImportError:
     sys.exit(1)
 
 ROOT = Path(__file__).resolve().parents[1]
-MAPPING = ROOT / "references" / "迁移" / "vcc" / "mapping.yaml"
+MAPPINGS = [
+    ("vcc", ROOT / "references" / "迁移" / "vcc" / "mapping.yaml"),
+    ("caas", ROOT / "references" / "迁移" / "caas" / "mapping.yaml"),
+]
 
 
 def load_entries():
-    data = yaml.safe_load(MAPPING.read_text(encoding="utf-8"))
-    return data.get("entries") or []
+    entries = []
+    for track, path in MAPPINGS:
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        for entry in data.get("entries") or []:
+            item = dict(entry)
+            item["_track"] = track
+            entries.append(item)
+    return entries
 
 
 def match(entry: dict, q: str) -> bool:
@@ -46,6 +56,7 @@ def fmt(entry: dict) -> str:
     old = entry.get("old")
     new = entry.get("new")
     lines = [
+        f"track: {entry.get('_track')}",
         f"id: {entry.get('id')}",
         f"domain: {entry.get('domain')}",
         f"status: {entry.get('status')}",
@@ -70,7 +81,7 @@ def fmt(entry: dict) -> str:
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Lookup legacy VCC → new API mapping (not CAAS)")
+    p = argparse.ArgumentParser(description="Lookup legacy VCC or CAAS → new API mapping")
     p.add_argument("query", nargs="?", help="old path fragment / id / keyword")
     p.add_argument(
         "--list-pending",
@@ -81,7 +92,7 @@ def main() -> None:
     entries = load_entries()
     if args.list_pending:
         for e in entries:
-            if e.get("status") in ("pending_add", "split", "partial", "gap", "new_only"):
+            if e.get("status") in ("pending_add", "split", "partial", "gap", "new_only", "recommended"):
                 print(fmt(e))
                 print("---")
         return

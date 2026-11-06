@@ -2,6 +2,10 @@
 
 最新条目置顶；技能版本以各自 `SKILL.md` frontmatter 为准。
 
+## kun-card-integration 1.3.5 - 2026-11-06
+
+按对照表 caas sheet 写好 `references/迁移/caas/`：多数接口只把 `/rest/v1.0/caas/` 换成 `/rest/v2.0/caas/`，参数不变。旧开卡仍可用，建议迁到 `openCard`，并用 `openCardQuery` 按 `originalRequestNo` 查状态。V2 新增 Sumsub 共享 KYC（`kyc-sumsub-shareToken`，终态走 `kyc-notify`）。
+
 ## kun-card-integration 1.3.4 - 2026-11-06
 
 迁移拆成两个目录：`references/迁移/vcc/`（现有商务卡旧 VCC 对照与能力差异）和 `references/迁移/caas/`（消费卡旧 CAAS，明确禁止套用 VCC mapping）。`lookup_mapping.py` 只查 VCC。

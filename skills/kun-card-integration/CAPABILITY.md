@@ -1,6 +1,6 @@
 # kun-card-integration 完整能力清单
 
-技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.4**）。
+技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.5**）。
 
 一套 skill = **新客户对接** + **旧 VCC 迁移** + **多语言可落地代码** + **异常码处理**。
 
@@ -13,7 +13,7 @@ kun-card-integration
 ├─ A. 产品选型
 ├─ B. 新 API 从零接入（商务卡 / 消费卡 / Webhook）
 ├─ C. 旧 VCC → 新 API 迁移（`迁移/vcc/`；无双轨期）
-├─ C2. 旧 CAAS → 新 API 迁移（`迁移/caas/`；对照未单列，禁止套用 VCC）
+├─ C2. 旧 CAAS → 新 API 迁移（`迁移/caas/`；多数只改路径；开卡建议 V2；Sumsub 新增）
 ├─ D. 鉴权与联调
 ├─ E. 状态 / 异常 / 查单（跨场景强制）
 ├─ E2. 异常码处理（HTTP / 平台码 / body.code·KLC*）
@@ -64,7 +64,7 @@ kun-card-integration
 | 新增查单 | 账户充值/转出状态查询（旧无） |
 | 查卡 / 改备注 | `user-cards`→`userCards`；`card-remark`→`updateCardRemark`（已 mapped） |
 | 切换策略 | **无双轨期**：沙箱改完 → 生产切新 |
-| 对照 CLI | `scripts/lookup_mapping.py`（只查 VCC） |
+| 对照 CLI | `scripts/lookup_mapping.py`（VCC 与 CAAS 分文件） |
 
 ## 4.1 C2. 旧 CAAS 迁移（`迁移/caas/`）
 
@@ -72,8 +72,10 @@ kun-card-integration
 |------|------|
 | 范围 | **仅**旧 `/rest/v1.0/caas/*`（消费卡） |
 | 与 VCC | 目录分开。禁止用 `vcc/mapping.yaml` 或 VCC 能力差异回答 |
-| 对照 | 字段级对照未单列。path 多为版本段 v1.0 → v2.0，以 `api-index.yaml` 的 `legacy_doc` 为准 |
-| 新接口 | `产品能力/消费卡/消费卡对接.md` |
+| 默认改造 | 版本段 `v1.0` → `v2.0`，请求和响应字段不变 |
+| 开卡 | 旧 `apply-card` 仍可用；建议 `openCard` + `openCardQuery`（`originalRequestNo`） |
+| Sumsub | V2 新增 `kyc-sumsub-shareToken`；同步只受理，终态走 `kyc-notify` |
+| 对照 | `迁移/caas/mapping.yaml` + `迁移/caas/接口对照表.md` |
 
 ---
 
@@ -145,7 +147,7 @@ kun-card-integration
 
 | 项 | 说明 |
 |----|------|
-| 把 CAAS 旧 path 当成 VCC 对照 | 禁止。CAAS 只读 `迁移/caas/`，对照尚未单列 |
+| 把 CAAS 旧 path 当成 VCC 对照 | 禁止。CAAS 只读 `迁移/caas/` |
 | 内部服务实现细节 | 面客禁止 |
 | 长期旧新双轨运营 | **不支持**；无双轨期 |
 

@@ -26,7 +26,7 @@
 
 | 技能 ID | 版本 | 说明 |
 |---------|------|------|
-| [`kun-card-integration`](./skills/kun-card-integration/) | 1.3.4 | **统一对接**：新接入 + VCC 迁移 / CAAS 迁移分目录 + 异常码；见 [CAPABILITY.md](./skills/kun-card-integration/CAPABILITY.md) |
+| [`kun-card-integration`](./skills/kun-card-integration/) | 1.3.5 | **统一对接**：VCC 迁移与 CAAS 迁移分目录；CAAS 多数只改路径，开卡建议 V2；见 [CAPABILITY.md](./skills/kun-card-integration/CAPABILITY.md) |
 
 ## 安装
 
