@@ -1,5 +1,5 @@
-# 旧 VCC (yeevcc /rest/v1.0/vcc) → 新开放 API (/rest/v2.0)
-# 范围：商务卡旧 VCC；消费卡/caas 迁移另册
+# VCC 迁移对照。只含旧 /rest/v1.0/vcc/* 。
+# 旧 CAAS（/rest/v1.0/caas/*）不在本文件，见 references/迁移/caas/ 。
 # 权威来源：vcc 新旧接口对照.xlsx + api-index.yaml + 能力差异.md
 # 状态：mapped | split | partial | gap | new_only
 version: "1.1.0"

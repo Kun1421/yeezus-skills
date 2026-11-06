@@ -5,7 +5,7 @@ description: >-
   迁移到 opendocs。  覆盖选型、沙箱跑通、可落地代码（签名、判态、查单、异常码处理、授权 A/D）、新旧接口对照与鉴权切换。
   语言对齐 yop-demo：Python/Java/Node/TS/Go/PHP/.NET。当用户提到对接卡、开卡、KYC、充值、共享账户、
   webhook、错误码、KLC、旧VCC迁移、yop-demo、opendocs.kun.global、沙箱联调时使用。
-version: 1.3.3
+version: 1.3.4
 ---
 
 # KUN 卡开放 API 统一对接技能
@@ -24,8 +24,9 @@ version: 1.3.3
 | 意图 | 入口 |
 |------|------|
 | 从零对接新 API | `产品能力/产品决策.md` → `最小跑通.md` |
-| 旧 VCC → 新 API 迁移 | `迁移/迁移总览.md` → `接口对照表.md` / `mapping.yaml` |
-| 查旧 path 对应新接口 | `scripts/lookup_mapping.py` |
+| 旧 VCC → 新 API 迁移 | `迁移/vcc/迁移总览.md` → `接口对照表.md` / `mapping.yaml` |
+| 旧 CAAS → 新 API 迁移 | `迁移/caas/迁移总览.md`（不要用 VCC 的 mapping） |
+| 查旧 VCC path 对应新接口 | `scripts/lookup_mapping.py`（只查 VCC） |
 | 判态 / 查单 / 异常 | `产品能力/状态判断与异常处理.md`（**写代码必读**） |
 | **异常码 / KLC / 平台码** | `产品能力/异常码处理.md`（**写代码必读**） |
 | 多语言 | `产品能力/多语言对齐.md` |
@@ -62,12 +63,13 @@ version: 1.3.3
 
 ## 面客交互
 
-1. 判定：**新接入** or **旧 VCC 迁移**（或两者：迁移后补判态）。  
+1. 判定：**新接入**、**旧 VCC 迁移**或 **旧 CAAS 迁移**。旧 path 含 `/rest/v1.0/vcc/` 才进 `迁移/vcc/`；含 `/rest/v1.0/caas/` 才进 `迁移/caas/`。禁止把 VCC 对照套到 CAAS。  
 2. 收集：环境、语言（yop-demo 矩阵）、凭证是否齐全、是否 Webhook；迁移则收集已用旧 path 清单。  
 3. 生产切换须二次确认。
 
 **快速通道（新接入）**：商务卡预付虚拟卡 + `<语言>` + 沙箱 → 直接模板 C。  
-**快速通道（迁移）**：已列出旧 `/rest/v1.0/vcc/*` + 语言 → 对照 + 鉴权改造 + 模板 M。
+**快速通道（VCC 迁移）**：已列出旧 `/rest/v1.0/vcc/*` + 语言 → `迁移/vcc/` 对照 + 鉴权改造 + 模板 M。  
+**快速通道（CAAS 迁移）**：已列出旧 `/rest/v1.0/caas/*` → 只读 `迁移/caas/迁移总览.md`，不要调用 `lookup_mapping.py` 充作 CAAS 对照。
 
 ---
 
@@ -77,10 +79,11 @@ version: 1.3.3
 |------|------|
 | 怎么选产品 | `产品能力/产品决策.md` |
 | 几分钟跑通 | `产品能力/最小跑通.md` |
-| **旧 VCC 迁移** | `迁移/迁移总览.md` |
-| 新旧对照 | `迁移/接口对照表.md` · `迁移/mapping.yaml` |
-| 同能力字段 / 缺口 | `迁移/能力差异.md` |
-| 鉴权从 YOP 切换 | `迁移/鉴权迁移.md` |
+| **旧 VCC 迁移** | `迁移/vcc/迁移总览.md` |
+| VCC 新旧对照 | `迁移/vcc/接口对照表.md` · `迁移/vcc/mapping.yaml` |
+| VCC 同能力字段 / 缺口 | `迁移/vcc/能力差异.md` |
+| VCC 鉴权从 YOP 切换 | `迁移/vcc/鉴权迁移.md` |
+| **旧 CAAS 迁移** | `迁移/caas/迁移总览.md`（对照未单列，禁止用 VCC mapping） |
 | 多语言 | `产品能力/多语言对齐.md` |
 | 状态/异常/查单 | `产品能力/状态判断与异常处理.md` |
 | **异常码处理** | `产品能力/异常码处理.md` |
@@ -101,10 +104,20 @@ version: 1.3.3
 
 ### 旧 VCC 迁移
 
-1. `迁移总览`（无双轨）→ 2. `鉴权迁移`（yop-demo → 新 RSA）  
-3. `lookup_mapping` / 对照表替换 path → 按 `能力差异.md` 改字段语义 → 4. 资金查单与 Webhook  
+只读 `迁移/vcc/`。
+
+1. `vcc/迁移总览`（无双轨）→ 2. `vcc/鉴权迁移`（yop-demo → 新 RSA）  
+3. `lookup_mapping` / `vcc` 对照表替换 path → 按 `vcc/能力差异.md` 改字段语义 → 4. 资金查单与 Webhook  
 5. 按语言改客户端 → 6. 沙箱冒烟 → 7. 切换清单 → 模板 M  
 8. 判态与异常码挂接 `状态判断与异常处理.md` + `异常码处理.md`
+
+### 旧 CAAS 迁移
+
+只读 `迁移/caas/`。不要执行上面的 VCC 步骤，不要调用 `lookup_mapping.py`。
+
+1. 确认旧 path 是 `/rest/v1.0/caas/*`  
+2. 读 `caas/迁移总览.md`：版本段多为 v1.0 → v2.0，字段对照未单列  
+3. 新接口行为以 `产品能力/消费卡/消费卡对接.md` 为准；缺字段对照就说明未单列，不要用 VCC 能力差异补
 
 ### 写代码判态与异常码（摘要）
 
@@ -142,7 +155,7 @@ version: 1.3.3
 ## 附加资源
 
 - [CAPABILITY.md](./CAPABILITY.md) · [多语言对齐](references/产品能力/多语言对齐.md)  
-- [最小跑通](references/产品能力/最小跑通.md) · [迁移总览](references/迁移/迁移总览.md) · [能力差异](references/迁移/能力差异.md)  
+- [最小跑通](references/产品能力/最小跑通.md) · [迁移分目录](references/迁移/README.md) · [VCC 迁移](references/迁移/vcc/迁移总览.md) · [CAAS 迁移](references/迁移/caas/迁移总览.md)  
 - [状态判断与异常处理](references/产品能力/状态判断与异常处理.md) · [异常码处理](references/产品能力/异常码处理.md)  
 - [examples](examples/) · [scripts](scripts/)  
 - [opendocs](https://opendocs.kun.global/)

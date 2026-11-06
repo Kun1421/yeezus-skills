@@ -2,6 +2,10 @@
 
 最新条目置顶；技能版本以各自 `SKILL.md` frontmatter 为准。
 
+## kun-card-integration 1.3.4 - 2026-11-06
+
+迁移拆成两个目录：`references/迁移/vcc/`（现有商务卡旧 VCC 对照与能力差异）和 `references/迁移/caas/`（消费卡旧 CAAS，明确禁止套用 VCC mapping）。`lookup_mapping.py` 只查 VCC。
+
 ## kun-card-integration 1.3.3 - 2026-11-06
 
 旧 VCC 迁移补充对外能力差异：新增 `references/迁移/能力差异.md`（身份、卡定位、产品码、账户模式、同能力字段、缺口与新增查询）。`mapping.yaml` 增加冻结/解冻、销卡、MCC、对账文件、Webhook 密钥，以及 `user-info`/`clear-record`/`card-swap` 的 partial/gap。

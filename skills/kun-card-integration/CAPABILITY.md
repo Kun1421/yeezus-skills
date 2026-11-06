@@ -1,6 +1,6 @@
 # kun-card-integration 完整能力清单
 
-技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.3**）。
+技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.4**）。
 
 一套 skill = **新客户对接** + **旧 VCC 迁移** + **多语言可落地代码** + **异常码处理**。
 
@@ -12,7 +12,8 @@
 kun-card-integration
 ├─ A. 产品选型
 ├─ B. 新 API 从零接入（商务卡 / 消费卡 / Webhook）
-├─ C. 旧 VCC → 新 API 迁移（商务卡；无双轨期）
+├─ C. 旧 VCC → 新 API 迁移（`迁移/vcc/`；无双轨期）
+├─ C2. 旧 CAAS → 新 API 迁移（`迁移/caas/`；对照未单列，禁止套用 VCC）
 ├─ D. 鉴权与联调
 ├─ E. 状态 / 异常 / 查单（跨场景强制）
 ├─ E2. 异常码处理（HTTP / 平台码 / body.code·KLC*）
@@ -51,19 +52,28 @@ kun-card-integration
 
 ---
 
-## 4. C. 旧 VCC 迁移（已整合，不另开 skill）
+## 4. C. 旧 VCC 迁移（`迁移/vcc/`）
 
 | 能力 | 说明 |
 |------|------|
-| 范围 | **仅商务卡**旧 `/rest/v1.0/vcc/*`；消费卡 caas 另册 |
+| 范围 | **仅**旧 `/rest/v1.0/vcc/*`。不是 CAAS |
 | 范式切换 | YOP（yop-demo）→ 新 RSA 头签 + `secretKey`/`requestNo` |
-| 接口对照 | `迁移/mapping.yaml` + `接口对照表.md` |
-| 能力差异 | `迁移/能力差异.md`：身份/卡定位/产品码/账户模式、同能力字段、partial/gap |
+| 接口对照 | `迁移/vcc/mapping.yaml` + `迁移/vcc/接口对照表.md` |
+| 能力差异 | `迁移/vcc/能力差异.md`：身份/卡定位/产品码/账户模式、同能力字段、partial/gap |
 | 查询拆分 | 旧 `card-recharge-query` → 充值查单 / 转出查单 |
 | 新增查单 | 账户充值/转出状态查询（旧无） |
 | 查卡 / 改备注 | `user-cards`→`userCards`；`card-remark`→`updateCardRemark`（已 mapped） |
 | 切换策略 | **无双轨期**：沙箱改完 → 生产切新 |
-| 对照 CLI | `scripts/lookup_mapping.py` |
+| 对照 CLI | `scripts/lookup_mapping.py`（只查 VCC） |
+
+## 4.1 C2. 旧 CAAS 迁移（`迁移/caas/`）
+
+| 能力 | 说明 |
+|------|------|
+| 范围 | **仅**旧 `/rest/v1.0/caas/*`（消费卡） |
+| 与 VCC | 目录分开。禁止用 `vcc/mapping.yaml` 或 VCC 能力差异回答 |
+| 对照 | 字段级对照未单列。path 多为版本段 v1.0 → v2.0，以 `api-index.yaml` 的 `legacy_doc` 为准 |
+| 新接口 | `产品能力/消费卡/消费卡对接.md` |
 
 ---
 
@@ -127,7 +137,7 @@ kun-card-integration
 | 模板 | 场景 |
 |------|------|
 | **C** | 从零接入 |
-| **M** | 旧 VCC 迁移（含切换清单，无双轨） |
+| **M** | 旧 VCC 迁移（`迁移/vcc/`，含切换清单，无双轨）。CAAS 不用这份对照 |
 
 ---
 
@@ -135,7 +145,7 @@ kun-card-integration
 
 | 项 | 说明 |
 |----|------|
-| 消费卡旧 caas 迁移 | 另册，不在当前 mapping |
+| 把 CAAS 旧 path 当成 VCC 对照 | 禁止。CAAS 只读 `迁移/caas/`，对照尚未单列 |
 | 内部服务实现细节 | 面客禁止 |
 | 长期旧新双轨运营 | **不支持**；无双轨期 |
 

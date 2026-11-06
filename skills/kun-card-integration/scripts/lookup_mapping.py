@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""按旧 VCC path / 关键字查询新旧接口对照（mapping.yaml）。"""
+"""按旧 VCC path / 关键字查询新旧接口对照（references/迁移/vcc/mapping.yaml）。
+
+不查询 CAAS。旧 /rest/v1.0/caas/* 见 references/迁移/caas/迁移总览.md。
+"""
 from __future__ import annotations
 
 import argparse
@@ -14,7 +17,7 @@ except ImportError:
     sys.exit(1)
 
 ROOT = Path(__file__).resolve().parents[1]
-MAPPING = ROOT / "references" / "迁移" / "mapping.yaml"
+MAPPING = ROOT / "references" / "迁移" / "vcc" / "mapping.yaml"
 
 
 def load_entries():
@@ -67,7 +70,7 @@ def fmt(entry: dict) -> str:
 
 
 def main() -> None:
-    p = argparse.ArgumentParser(description="Lookup legacy VCC → new API mapping")
+    p = argparse.ArgumentParser(description="Lookup legacy VCC → new API mapping (not CAAS)")
     p.add_argument("query", nargs="?", help="old path fragment / id / keyword")
     p.add_argument(
         "--list-pending",

@@ -19,7 +19,7 @@ python kun_client.py call --env sandbox \
 | `gen-key` | 生成本地 RSA2048 密钥对 |
 | `sign-string` | 打印待签字符串，便于对签 |
 | `call` | 签名并 POST；`--dry-run` 不发网 |
-| `lookup_mapping.py <旧path或id>` | 旧 VCC → 新 API 对照 |
-| `lookup_mapping.py --list-pending` | 列出 pending_add / split / new_only |
+| `lookup_mapping.py <旧path或id>` | 旧 **VCC** → 新 API 对照（不查 CAAS） |
+| `lookup_mapping.py --list-pending` | 列出 VCC 的 pending_add / split / partial / gap / new_only |
 
-字段与黄金路径见 `../references/产品能力/最小跑通.md`；迁移见 `../references/迁移/`。
+字段与黄金路径见 `../references/产品能力/最小跑通.md`。VCC 迁移见 `../references/迁移/vcc/`；CAAS 迁移见 `../references/迁移/caas/`。
