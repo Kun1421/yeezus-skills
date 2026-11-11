@@ -46,7 +46,7 @@ kun-card-integration
 | 卡信息/余额/限额/激活 | 运维查询与配置 |
 | 机构分页查卡 | `POST .../common/userCards`（旧 user-cards） |
 | 修改卡备注 | `POST .../common/updateCardRemark`（旧 card-remark → 字段 `cardRemark`） |
-| Webhook 接收 | 验签、`authResult=A\|D`、幂等 |
+| Webhook 接收 | HMAC-SHA256 v1 验签（`X-Webhook-Timestamp`/`Signature`）、`authResult=A\|D`、幂等；样例 `examples/webhook_hmac_v1.py` |
 | 沙箱命令 | `kun_client.py call` |
 | 可落多样例 | Python / Java 仓库样例；其他语言同构生成 |
 
@@ -84,7 +84,7 @@ kun-card-integration
 | 能力 | 旧（迁移对照） | 新（接入/迁移后） |
 |------|----------------|-------------------|
 | 签名 | YOP v3 RSA（yop-demo） | SHA256withRSA 请求头 `Sign` |
-| Webhook | HMAC-SHA256 v1（yop-demo） | 按 opendocs 新验签 |
+| Webhook | HMAC-SHA256 v1（yop-demo） | 同算法：`{ts}.{rawBody}` + `X-Webhook-*`；见 `Webhook/Webhook对接.md` |
 | 联调 | yop-demo 菜单调用 | `kun_client.py` / 各语言客户端 |
 | 网关 | 客户存量 YOP | `sandbox.kun.global` / `openapi.kun.global` |
 

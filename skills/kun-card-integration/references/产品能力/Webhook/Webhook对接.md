@@ -23,7 +23,48 @@
 
 配置验签密钥（商户主动调用，非 webhook）：
 
-- `POST /rest/v2.0/caas/config/webhook-sign-key-config`
+- `POST /rest/v2.0/caas/config/webhook-sign-key-config`（body 以 `signKey` 为主）
+- 或在商户后台「技术参数」打开签名开关并填写同一把签名密钥
+
+推荐密钥：32 字节随机值的 Base64（256-bit），由商户自生成并自行保管。
+
+## 回调签名（HMAC-SHA256 v1）
+
+平台向商户 URL **出站推送**时，若已开启签名校验且 `signKey` 非空，会在请求头携带：
+
+| Header | 含义 |
+|--------|------|
+| `X-Webhook-Timestamp` | epoch **秒** |
+| `X-Webhook-Signature` | 小写 hex；也可能是 `v1=<hex>` |
+| `X-Webhook-Type` | 通知类型（若有） |
+
+### 算法
+
+```text
+signing_string = "{timestamp}.{rawBody}"   # 中间一个点号
+signature      = lowercase_hex( HMAC_SHA256( UTF8(signKey), UTF8(signing_string) ) )
+```
+
+**`rawBody` 必须是 HTTP 请求体原文（UTF-8）**，不要 `JSON.parse` 后再 `stringify`，不要按 key 排序重排。签名与 body 字节不一致是验签失败的最常见原因。
+
+### 商户验签步骤
+
+1. 读取 `X-Webhook-Timestamp`、`X-Webhook-Signature` 与 **原始 body**。  
+2. 校验 `|now - timestamp| ≤ 300` 秒（防重放；可按风控加严）。  
+3. 用配置的 `signKey` 按上式重算 hex，与头中签名做常量时间比较（支持去掉 `v1=` 前缀）。  
+4. 通过后再解析 JSON、改业务态；失败返回 4xx，**不改业务**。
+
+### 可落代码
+
+| 语言 | 文件 |
+|------|------|
+| Python | `examples/webhook_hmac_v1.py`（`verify_v1_hex` / `verify_from_headers`） |
+| Python + Flask | `examples/webhook_auth_handler.py` |
+| Java | `examples/java/WebhookHmacV1.java` |
+
+环境变量示例：`KUN_WEBHOOK_SIGN_KEY=<与平台配置相同的签名密钥>`。
+
+未开启签名开关时，平台可能不带上述头；生产一旦开签，接收端应强制验签。
 
 ## 商务卡 vs 消费卡场景差异
 
@@ -46,7 +87,7 @@
 | 异步通知（清算/OTP/卡状态/KYC…） | HTTP 2xx + 内部幂等落库 | 验签失败拒绝；处理慢则先应答再异步；终态不回退 |
 | 与查单冲突 | 以再次查询为准并告警 | 见状态判断文档双通道 |
 
-落地样例：`examples/webhook_auth_handler.py`（验签请按开放文档替换占位实现）。
+落地样例：`examples/webhook_auth_handler.py` + `examples/webhook_hmac_v1.py`（已实现 HMAC-SHA256 v1）。
 
 ## 推荐接入顺序
 
@@ -86,14 +127,19 @@
 
 - **把文档示例 URL 当成真实回调地址** → 以商户配置的接收地址为准。
 - **授权接口当普通通知** → `transaction` 是同步决策，必须返回批准/拒绝。
-- **未配 webhook-sign-key** → 验签失败、或跳过验签导致伪造风险。
+- **未配 webhook-sign-key / 未开签名开关** → 无签名头，或跳过验签导致伪造风险。
+- **验签用错 body**：对 JSON 重排/再序列化 → `signature_mismatch`。必须用原始字节。
+- **密钥搞混**：OpenAPI body `secretKey` ≠ Webhook `signKey`（签名密钥）。
 - **消费卡漏接 KYC 通知** → 开卡时机错误。
 - **拼写**：`result-nofity` 按 path 原样配置路由。
+
 ## 排障
 
 | 现象 | 排查 |
 |------|------|
 | 收不到通知 | 公网可达、TLS、IP 白名单、路径配置、平台重试日志 |
-| 验签失败 | 密钥是否最新、参与验签字段、编码 |
+| 验签失败 | 密钥与平台是否同一把；是否用原文 body；时间窗 300s；头名 `X-Webhook-*` |
+| `timestamp_out_of_range` | 服务器时钟；容忍秒数是否过严 |
+| `signature_mismatch` | body 被中间件改写；密钥含多余空格/换行；误用 RSA 私钥或 `secretKey` |
 | 授权大量拒绝/超时 | 商户 RT、依赖超时、幂等锁死 |
 | 状态不一致 | 通知 + 主动查询对账 |

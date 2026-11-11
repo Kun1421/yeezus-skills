@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 """授权 Webhook 可落地表样（Flask）。
 
-职责：验签（按你配置的 webhook 签名密钥实现）→ 幂等 → 返回 authResult=A/D。
-生产请替换内存幂等为 DB 唯一约束；验签算法以开放文档「结果通知/Webhook」为准。
+职责：HMAC-SHA256 v1 验签 → 幂等 → 返回 authResult=A/D。
+验签实现见同目录 webhook_hmac_v1.py；生产请将内存幂等替换为 DB 唯一约束。
 """
 from __future__ import annotations
 
-import hashlib
-import hmac
 import os
+
 from flask import Flask, jsonify, request
+
+from webhook_hmac_v1 import HEADER_SIGNATURE, HEADER_TIMESTAMP, verify_from_headers
 
 app = Flask(__name__)
 
@@ -18,14 +19,8 @@ app = Flask(__name__)
 _DECISION_STORE: dict[str, str] = {}
 
 WEBHOOK_SIGN_KEY = os.getenv("KUN_WEBHOOK_SIGN_KEY", "YOUR_WEBHOOK_SIGN_KEY")
-
-
-def verify_signature(raw_body: bytes, signature: str | None) -> bool:
-    """占位验签：请按 opendocs 结果通知章节替换为平台约定算法。"""
-    if not signature:
-        return False
-    digest = hmac.new(WEBHOOK_SIGN_KEY.encode("utf-8"), raw_body, hashlib.sha256).hexdigest()
-    return hmac.compare_digest(digest, signature)
+# 未配置签名开关时平台可能不带头；生产若已开签建议保持 True
+REQUIRE_SIGNATURE = os.getenv("KUN_WEBHOOK_REQUIRE_SIGNATURE", "1") not in ("0", "false", "False")
 
 
 def decide(payload: dict) -> str:
@@ -40,15 +35,22 @@ def decide(payload: dict) -> str:
 
 @app.post("/hooks/kun/auth")
 def auth_webhook():
-    raw = request.get_data()
-    sig = request.headers.get("Sign") or request.headers.get("sign")
-    if not verify_signature(raw, sig):
-        return jsonify({"code": "SIGN_ERROR", "message": "invalid signature"}), 401
+    raw = request.get_data()  # 原文 bytes，禁止先 get_json 再 dumps
+    headers = {
+        HEADER_TIMESTAMP: request.headers.get(HEADER_TIMESTAMP),
+        HEADER_SIGNATURE: request.headers.get(HEADER_SIGNATURE),
+    }
+
+    has_sig_headers = bool(headers[HEADER_TIMESTAMP] and headers[HEADER_SIGNATURE])
+    if REQUIRE_SIGNATURE or has_sig_headers:
+        result = verify_from_headers(WEBHOOK_SIGN_KEY, headers, raw, tolerance_seconds=300)
+        if not result.ok:
+            return jsonify({"code": "SIGN_ERROR", "message": result.reason}), 401
 
     payload = request.get_json(force=True, silent=True) or {}
     webhook_type = payload.get("webhookType") or ""
     tx_id = payload.get("transactionId") or ""
-    if not tx_id:
+    if not tx_id and webhook_type in ("", "AUTH_WEBHOOK"):
         return jsonify({"code": "BAD_REQUEST", "message": "missing transactionId"}), 400
 
     # 非授权类：异步通知可快速 200 + 异步处理
@@ -76,4 +78,5 @@ def auth_webhook():
 
 if __name__ == "__main__":
     # pip install flask
+    # export KUN_WEBHOOK_SIGN_KEY='你的签名密钥'
     app.run(host="0.0.0.0", port=8088)

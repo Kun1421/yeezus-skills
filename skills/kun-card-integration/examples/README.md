@@ -5,8 +5,8 @@
 
 | 语言（对齐 yop-demo） | 仓库样例 | 说明 |
 |----------------------|----------|------|
-| Python (`python-demo`) | `commercial_prepaid_flow.py`、`webhook_auth_handler.py`；联调 `../scripts/kun_client.py` | 最快沙箱联调 |
-| Java (`java-demo` / without-sdk) | `java/KunOpenApiClient.java`、`java/CommercialPrepaidFlow.java`、`java/pom.xml` | JDK 11+ |
+| Python (`python-demo`) | `commercial_prepaid_flow.py`、`webhook_hmac_v1.py`、`webhook_auth_handler.py`；联调 `../scripts/kun_client.py` | 最快沙箱联调 |
+| Java (`java-demo` / without-sdk) | `java/KunOpenApiClient.java`、`java/CommercialPrepaidFlow.java`、`java/WebhookHmacV1.java`、`java/pom.xml` | JDK 11+ |
 | Java-Web (`java-web-demo`) | （按需生成） | Spring 等 Web 封装，逻辑同 `CommercialPrepaidFlow` |
 | Node.js (`nodejs-demo`) | （按需生成） | 签名客户端 + 开卡/查单流程 |
 | TypeScript (`typescript-demo`) | （按需生成） | 同上，TS 类型化 |
@@ -17,9 +17,11 @@
 | 文件 | 说明 |
 |------|------|
 | `commercial_prepaid_flow.py` | 商务卡预付虚拟卡（Python）：拉产品 → 持卡人 → 开卡 → **判态/查单** |
-| `webhook_auth_handler.py` | 授权 Webhook：验签骨架 + `A`/`D` 幂等响应 |
+| `webhook_hmac_v1.py` | Webhook 回调 HMAC-SHA256 v1 验签工具（`verify_v1_hex`） |
+| `webhook_auth_handler.py` | 授权 Webhook：验签 + `A`/`D` 幂等响应 |
 | `java/KunOpenApiClient.java` | Java 签名客户端（RSA SHA256withRSA） |
 | `java/CommercialPrepaidFlow.java` | 商务卡预付虚拟卡（Java）：与 Python 同构判态/查单/异常分类 |
+| `java/WebhookHmacV1.java` | Webhook 回调 HMAC-SHA256 v1 验签（与 Python 同构） |
 | `java/pom.xml` | 最小 Maven 依赖（Jackson + exec 插件） |
 
 ## Python
@@ -27,6 +29,14 @@
 1. `pip install -r ../scripts/requirements.txt`
 2. 配置环境变量或改文件顶部 `Config`（勿提交真实密钥）
 3. 沙箱先跑通；生产前按 `状态判断与异常处理.md` 补齐 DB 幂等与定时查单
+
+### Webhook 验签自测
+
+```bash
+python webhook_hmac_v1.py
+# export KUN_WEBHOOK_SIGN_KEY='与技术参数相同的签名密钥'
+# python webhook_auth_handler.py   # 默认 :8088
+```
 
 ## Java（沙箱）
 

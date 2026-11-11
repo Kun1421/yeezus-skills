@@ -5,7 +5,7 @@ description: >-
   迁移到 opendocs。  覆盖选型、沙箱跑通、可落地代码（签名、判态、查单、异常码处理、授权 A/D）、新旧接口对照与鉴权切换。
   语言对齐 yop-demo：Python/Java/Node/TS/Go/PHP/.NET。当用户提到对接卡、开卡、KYC、充值、共享账户、
   webhook、错误码、KLC、旧VCC迁移、yop-demo、opendocs.kun.global、沙箱联调时使用。
-version: 1.3.5
+version: 1.3.6
 ---
 
 # KUN 卡开放 API 统一对接技能
@@ -88,8 +88,8 @@ version: 1.3.5
 | 状态/异常/查单 | `产品能力/状态判断与异常处理.md` |
 | **异常码处理** | `产品能力/异常码处理.md` |
 | 状态枚举 / 字段 | `状态与枚举.md` · `字段要求.md` |
-| 商务卡 / 消费卡 / Webhook | 各自对接 md |
-| 样例 | `examples/` |
+| 商务卡 / 消费卡 / Webhook | 各自对接 md；Webhook 验签见 `Webhook/Webhook对接.md` |
+| 样例 | `examples/`（含 `webhook_hmac_v1.py` / `java/WebhookHmacV1.java`） |
 | 签名联调 | `scripts/kun_client.py` |
 | 对照查询 | `scripts/lookup_mapping.py` |
 

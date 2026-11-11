@@ -33,9 +33,11 @@
 ## 4. Webhook 收不到 / 验签失败
 
 1. 接收 URL 公网 HTTPS、证书有效。
-2. 已配置 webhook 签名密钥。
-3. 防火墙 / 路径是否配错。
-4. 授权类接口是否因超时被记失败。
+2. 已配置 webhook 签名密钥（`signKey`），并打开签名开关；与接收端环境变量一致。
+3. 验签算法：`HMAC-SHA256(signKey, "{timestamp}.{rawBody}")` → 小写 hex；头为 `X-Webhook-Timestamp` / `X-Webhook-Signature`。见 `产品能力/Webhook/Webhook对接.md` 与 `examples/webhook_hmac_v1.py`。
+4. **必须用 HTTP 原文 body**，禁止 JSON 重排后再验。
+5. 勿把 OpenAPI `secretKey` 或 RSA 私钥当成 Webhook `signKey`。
+6. 防火墙 / 路径是否配错；授权类是否因超时被记失败。
 
 ## 5. KYC 卡住（消费卡）
 
