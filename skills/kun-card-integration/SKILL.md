@@ -5,7 +5,7 @@ description: >-
   迁移到 opendocs。  覆盖选型、沙箱跑通、可落地代码（签名、判态、查单、异常码处理、授权 A/D）、新旧接口对照与鉴权切换。
   语言对齐 yop-demo：Python/Java/Node/TS/Go/PHP/.NET。当用户提到对接卡、开卡、KYC、充值、共享账户、
   webhook、错误码、KLC、旧VCC迁移、yop-demo、opendocs.kun.global、沙箱联调时使用。
-version: 1.3.6
+version: 1.3.7
 ---
 
 # KUN 卡开放 API 统一对接技能

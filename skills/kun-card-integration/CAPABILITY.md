@@ -1,6 +1,6 @@
 # kun-card-integration 完整能力清单
 
-技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.5**）。
+技能 ID：`kun-card-integration` · 版本以 `SKILL.md` frontmatter 为准（当前 **1.3.7**）。
 
 一套 skill = **新客户对接** + **旧 VCC 迁移** + **多语言可落地代码** + **异常码处理**。
 
@@ -43,7 +43,7 @@ kun-card-integration
 | 消费卡 | KYC → apply-card → 查单（caas 前缀） |
 | 卡资金 | 充值/转出 + 状态查询 |
 | 批量开卡/销卡 | 任务查询至终态 |
-| 卡信息/余额/限额/激活 | 运维查询与配置 |
+| 卡信息/余额/限额/激活 | 运维查询与配置；`cardNo`/`cvv`/`expiryDate` 用 `sensitiveKey` + AES/CBC 解密，IV=`1234567890000000` |
 | 机构分页查卡 | `POST .../common/userCards`（旧 user-cards） |
 | 修改卡备注 | `POST .../common/updateCardRemark`（旧 card-remark → 字段 `cardRemark`） |
 | Webhook 接收 | HMAC-SHA256 v1 验签（`X-Webhook-Timestamp`/`Signature`）、`authResult=A\|D`、幂等；样例 `examples/webhook_hmac_v1.py` |
@@ -63,6 +63,7 @@ kun-card-integration
 | 查询拆分 | 旧 `card-recharge-query` → 充值查单 / 转出查单 |
 | 新增查单 | 账户充值/转出状态查询（旧无） |
 | 查卡 / 改备注 | `user-cards`→`userCards`；`card-remark`→`updateCardRemark`（已 mapped） |
+| 敏感字段解密 | 停用 License `aesKey`；`sensitiveKey` + AES/CBC，**IV 固定 `1234567890000000`**（`能力差异.md` §3.5） |
 | 切换策略 | **无双轨期**：沙箱改完 → 生产切新 |
 | 对照 CLI | `scripts/lookup_mapping.py`（VCC 与 CAAS 分文件） |
 
