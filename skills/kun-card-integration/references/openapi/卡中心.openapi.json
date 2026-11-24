@@ -365,7 +365,7 @@
                     "type": "string"
                   },
                   "customerId": {
-                    "description": "持卡人在商户系统的唯一 ID",
+                    "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位",
                     "maxLength": 64,
                     "type": "string"
                   },
@@ -382,7 +382,6 @@
                 },
                 "required": [
                   "secretKey",
-                  "customerId",
                   "cardId",
                   "ip"
                 ]
@@ -814,7 +813,8 @@
                     "type": "string"
                   },
                   "customerId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位"
                   },
                   "ip": {
                     "type": "string"
@@ -826,7 +826,6 @@
                 "required": [
                   "requestNo",
                   "secretKey",
-                  "customerId",
                   "ip",
                   "cardId"
                 ]
@@ -3877,7 +3876,8 @@
                     "type": "string"
                   },
                   "customerId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位"
                   },
                   "ip": {
                     "type": "string"
@@ -3895,7 +3895,6 @@
                 "required": [
                   "requestNo",
                   "secretKey",
-                  "customerId",
                   "ip",
                   "cardId",
                   "transferOutAmount",
@@ -3954,7 +3953,8 @@
                     "type": "string"
                   },
                   "customerId": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位"
                   },
                   "ip": {
                     "type": "string"
@@ -3969,7 +3969,6 @@
                 "required": [
                   "requestNo",
                   "secretKey",
-                  "customerId",
                   "ip",
                   "cardId",
                   "originalRequestNo"
@@ -6518,7 +6517,7 @@
             "type": "string"
           },
           "customerId": {
-            "description": "持卡人在商户系统的唯一 ID",
+            "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位",
             "maxLength": 64,
             "type": "string"
           },
@@ -6530,7 +6529,6 @@
         },
         "required": [
           "secretKey",
-          "customerId",
           "cardId"
         ],
         "title": "QueryBalanceByCardIdReq"
@@ -7503,7 +7501,7 @@
             "type": "string"
           },
           "customerId": {
-            "description": "持卡人在商户系统的唯一 ID",
+            "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位",
             "maxLength": 64,
             "type": "string"
           },
@@ -7525,7 +7523,6 @@
         },
         "required": [
           "secretKey",
-          "customerId",
           "cardId",
           "operationType",
           "ip"
@@ -7606,7 +7603,7 @@
             "type": "string"
           },
           "customerId": {
-            "description": "持卡人在商户系统的唯一 ID",
+            "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位",
             "type": "string"
           },
           "cardId": {
@@ -7622,7 +7619,6 @@
         },
         "required": [
           "secretKey",
-          "customerId",
           "cardId",
           "ip"
         ],
@@ -7636,7 +7632,7 @@
             "type": "string"
           },
           "customerId": {
-            "description": "持卡人在商户系统的唯一 ID",
+            "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位",
             "maxLength": 64,
             "type": "string"
           },
@@ -7654,7 +7650,6 @@
         },
         "required": [
           "secretKey",
-          "customerId",
           "cardId",
           "ip"
         ],
@@ -7691,7 +7686,7 @@
             "type": "string"
           },
           "customerId": {
-            "description": "持卡人在商户系统的唯一 ID",
+            "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位",
             "maxLength": 64,
             "type": "string"
           },
@@ -7708,7 +7703,6 @@
         },
         "required": [
           "secretKey",
-          "customerId",
           "cardId",
           "ip"
         ],
@@ -7757,7 +7751,7 @@
           },
           "customerId": {
             "type": "string",
-            "description": "持卡人在商户系统的唯一 ID"
+            "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位"
           },
           "ip": {
             "type": "string",
@@ -7783,7 +7777,6 @@
         "required": [
           "requestNo",
           "secretKey",
-          "customerId",
           "ip",
           "cardId",
           "rechargeAmount",
@@ -7840,7 +7833,7 @@
             "type": "string"
           },
           "customerId": {
-            "description": "持卡人在商户系统的唯一 ID",
+            "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位",
             "maxLength": 64,
             "type": "string"
           },
@@ -7862,7 +7855,6 @@
         },
         "required": [
           "secretKey",
-          "customerId",
           "cardId",
           "originalRequestNo"
         ],
@@ -8296,7 +8288,7 @@
             "type": "string"
           },
           "customerId": {
-            "description": "持卡人在商户系统的唯一 ID",
+            "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位",
             "maxLength": 64,
             "type": "string"
           },
@@ -8322,7 +8314,6 @@
         "required": [
           "requestNo",
           "secretKey",
-          "customerId",
           "ip",
           "cardId"
         ],
@@ -9069,7 +9060,7 @@
             "type": "string"
           },
           "customerId": {
-            "description": "持卡人在商户系统的唯一 ID",
+            "description": "持卡人在商户系统的唯一 ID，可选；传入时按归属筛选，不传则仅按机构号+卡 ID 定位",
             "maxLength": 64,
             "type": "string"
           },
@@ -9100,7 +9091,6 @@
         "required": [
           "requestNo",
           "secretKey",
-          "customerId",
           "ip",
           "cardId",
           "mccRuleType",
@@ -9863,7 +9853,7 @@
         "type": "object",
         "properties": {
           "requestNo": {
-            "description": "请求流水号，商户侧唯一",
+            "description": "通知流水号（平台生成，商户侧幂等建议用此字段）",
             "maxLength": 64,
             "type": "string"
           },
@@ -9877,7 +9867,21 @@
             "type": "string"
           },
           "cardStatus": {
-            "description": "卡状态",
+            "description": "卡状态事件：ACTIVE / FREEZE / UNFREEZE / CANCEL / LOCK / UNLOCK / PHYSICAL_CARD_ACTIVE",
+            "type": "string"
+          },
+          "originalRequestNo": {
+            "description": "触发本次变更的商户原请求号（操作记录 requestNo）；无对应操作单时可空",
+            "maxLength": 64,
+            "type": "string"
+          },
+          "orderId": {
+            "description": "操作记录全局订单号；无对应操作单时可空",
+            "maxLength": 64,
+            "type": "string"
+          },
+          "operationType": {
+            "description": "操作类型（与卡操作记录一致，如 OPEN_CARD / FREEZE_CARD / CANCEL_CARD）；无法匹配操作类型时为 UPDATE_INFO，不会为空",
             "type": "string"
           }
         },
@@ -9885,7 +9889,8 @@
           "requestNo",
           "webhookType",
           "cardId",
-          "cardStatus"
+          "cardStatus",
+          "operationType"
         ],
         "title": "CardStatusUpdateWebHookReq"
       },

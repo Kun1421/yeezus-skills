@@ -115,6 +115,15 @@ signature      = lowercase_hex( HMAC_SHA256( UTF8(signKey), UTF8(signing_string)
 
 卡状态推送事件：`ACTIVE` / `FREEZE` / `UNFREEZE` / `CANCEL` / `LOCK` / `UNLOCK` / `PHYSICAL_CARD_ACTIVE`。
 
+卡状态变更 webhook（`CARD_STATUS_UPDATE_NOTIFY`）额外对账字段：
+
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `requestNo` | 是 | 通知流水号（平台生成） |
+| `originalRequestNo` | 否 | 触发变更的商户原请求号；无操作单时可空 |
+| `orderId` | 否 | 操作记录全局订单号；无操作单时可空 |
+| `operationType` | 是 | 操作记录类型（如 `OPEN_CARD` / `FREEZE_CARD`）；无法匹配时为 `UPDATE_INFO`，不为空 |
+
 ## 异步通知要点
 
 - 验签通过后再改业务状态。
